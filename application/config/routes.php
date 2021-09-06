@@ -53,6 +53,9 @@ $route['default_controller'] = 'Auth';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
+$route['auth'] = 'Auth/index';
+$route['auth/(:any)'] = 'Auth/$1';
+
 $route['dashboard']                       = 'dashboard/index';
 
 $route['content/kompetensi']              = 'Content/index';

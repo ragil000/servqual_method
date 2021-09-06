@@ -32,12 +32,7 @@ defined('DIR_READ_MODE')   OR define('DIR_READ_MODE', 0755);
 defined('DIR_WRITE_MODE')  OR define('DIR_WRITE_MODE', 0755);
 
 // RMY constant
-defined('BASE_API_URL')  OR define('BASE_API_URL', 'http://localhost/api.pil/api/');
-defined('DEFAULT_IMAGE')  OR define('DEFAULT_IMAGE', 'http://localhost/admin.pil/back/assets/img/default.png');
-defined('KOMPETENSI')  OR define('KOMPETENSI', '1');
-defined('MATERI')  OR define('MATERI', '2');
-defined('TENTANG')  OR define('TENTANG', '3');
-defined('BANTUAN')  OR define('BANTUAN', '4');
+// defined('BASE_API_URL')  OR define('BASE_API_URL', 'http://localhost/api.pil/api/');
 // end
 
 /*

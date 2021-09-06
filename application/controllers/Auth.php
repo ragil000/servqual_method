@@ -9,43 +9,85 @@ class Auth extends CI_Controller {
     }
     
     public function index() {
-        if($this->session->userdata('auth_login')) {
+        if($this->session->userdata('auth_signin')) {
 			redirect('dashboard');
 		}
-        $this->load->view('pages/login');
+        $this->load->view('pages/signin');
     }
 
-    public function login() {
+    public function signin() {
         $post = [
             'username' => $this->input->post('username'),
-            'password' => $this->input->post('password')
+            'password' => $this->input->post('password'),
+            'lab_id' => $this->input->post('lab_id')
         ];
         
-        $getUser = $this->Auth_model->login($post);
-        if($getUser->status) {
-            $dataUser = $getUser->data;
-            if($dataUser->role == 'admin') {
+        $get_user = $this->Auth_model->signin($post);
+        // print_r($get_user->message);die;
+        if($get_user->status) {
+            $data_user = $get_user->data;
+            if($data_user->role == 'admin') {
                 $this->session->set_userdata([
-                  'auth_login' => TRUE,
-                  '_id' => $dataUser->_id, 
-                  'username' => $dataUser->username,
-                  'role' => $dataUser->role
+                  'auth_signin' => TRUE,
+                  '_id' => $data_user->_id, 
+                  'username' => $data_user->username,
+                  'role' => $data_user->role
                 ]);
                 redirect('dashboard');
-            }else if($dataUser->role == 'user') {
-                session_destroy();
-                $this->session->set_flashdata(['flash_message' => TRUE, 'message' => 'Anda bukan admin']);
+            }else if($data_user->role == 'user') {
+                $this->session->set_userdata([
+                    'auth_signin' => TRUE,
+                    '_id' => $data_user->_id, 
+                    'username' => $data_user->username,
+                    'role' => $data_user->role,
+                    'lab_id' => $data_user->lab_id,
+                    'lab_title' => $data_user->lab_title
+                ]);
+                redirect('home?lab_id='.$data_user->lab_title);
+            }else {
+                // session_destroy();
+                $this->session->set_flashdata(['flash_message' => TRUE, 'message' => $get_user->message]);
                 redirect('Auth');
             }
         }else {
-            session_destroy();
-            $this->session->set_flashdata(['flash_message' => TRUE, 'message' => 'Email atau password tidak valid']);
+            // session_destroy();
+            $this->session->set_flashdata(['flash_message' => TRUE, 'message' => $get_user->message]);
             redirect('Auth');
+        }
+    }
+
+    public function register() {
+        if($this->session->userdata('auth_signin')) {
+			redirect('dashboard');
+		}
+        $this->load->view('pages/signup');
+    }
+
+    public function signup() {
+        $post = [
+            'username' => $this->input->post('username'),
+            'password' => $this->input->post('password'),
+            'role' => $this->input->post('role')
+        ];
+
+        if(!empty($this->input->post('lab_id'))) {
+            $post['lab_id'] = $this->input->post('lab_id');
+        }
+        
+        $set_user = $this->Auth_model->signup($post);
+        if($set_user->status) {
+            // session_destroy();
+            $this->session->set_flashdata(['flash_message' => TRUE, 'message' => $set_user->message]);
+            redirect('Auth/register');
+        }else {
+            // session_destroy();
+            $this->session->set_flashdata(['flash_message' => TRUE, 'message' => $set_user->message]);
+            redirect('Auth/register');
         }
     }
 
     public function logout() {
         session_destroy();
-        redirect('dashboard');
+        redirect('Auth');
     }
 }

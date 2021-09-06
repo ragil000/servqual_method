@@ -5,24 +5,20 @@ class Dashboard extends CI_Controller {
 
 	public function __construct() {
 		parent::__construct();
-		if(!$this->session->userdata('auth_login')) {
+		// $this->load->model('Auth_model');
+    }
+    
+    public function index() {
+        if(!$this->session->userdata('auth_signin')) {
 			redirect('Auth');
 		}
-		$this->load->model('All_model');
-	}
-
-	public function index($content = 'dashboard')
-	{
-		$data['news'] = [];
-		$data['galery'] = [];
-		$data['views'] = [];
-		$data['head']		= 'Dashboard';
-		$data['content']	= 'Dashboard.';
-		$data['title']		= 'Dashboard';
-		$data['script']		= $content.'.js';
+        $data['head'] 			= 'Dashboard';
+		$data['content']		= 'Halaman awal admin';
+		$data['title']			= 'Selamat Datang :)';
+		// $data['node_modules']	= 'sweetalert2/dist/sweetalert2.all.min.js';
+		$data['script']			= 'dashboard.js';
 		$this->load->view('templates/header', $data);
-		$this->load->view('pages/'.$content);
+		$this->load->view('pages/dashboard');
 		$this->load->view('templates/footer');
-	}
-
+    }
 }
