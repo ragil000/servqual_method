@@ -40,35 +40,34 @@
         <!-- Argon JS -->
         <script src="<?=base_url()?>back/assets/js/argon.js?v=1.0.0"></script>
 
-        <!-- Sim text editor -->
-        <script type="text/javascript" src="<?=base_url()?>back/node_modules/simple-hotkeys/node_modules/simple-module/lib/module.js"></script>
-        <script type="text/javascript" src="<?=base_url()?>back/node_modules/simple-hotkeys/lib/hotkeys.js"></script>
-        <script type="text/javascript" src="<?=base_url()?>back/node_modules/simple-uploader/dist/uploader.js"></script>
-        <script type="text/javascript" src="<?=base_url()?>back/node_modules/simditor/lib/simditor.js"></script>
-        
-        <!-- ckditor5 -->
-        <script src="https://cdn.ckeditor.com/ckeditor5/23.1.0/classic/ckeditor.js"></script>
-
-        <!-- by node_modules -->
+        <!-- by vendor -->
         <?php
-            if(isset($node_modules)) {
+        if(isset($js_vendors)) {
+            for($i=0; $i<count($js_vendors); $i++) {
         ?>
-        <script type="text/javascript" src="<?=base_url()?>back/node_modules/<?=$node_modules?>"></script>
+            <script type="text/javascript" src="<?=base_url()?>back/assets/vendor/<?=$js_vendors[$i]?>"></script>
         <?php
             }
+        }
         ?>
 
         <!-- Custom inline -->
         <script type="text/javascript">
-            const base_url = '<?=base_url()?>'
-            const base_api_url = '<?=BASE_API_URL?>'
+            const base_url = '<?=base_url()?>';
+            const sessions = <?=json_encode($this->session->userdata())?>;
         </script>
 
         <!-- RMY Library -->
         <script src="<?=base_url()?>back/assets/js/RMYLibrary.js?v=<?=time()?>"></script>
 
-        <!-- custom script -->
-        <script type="text/javascript" src="<?=base_url()?>back/assets/js/<?=$script?>?v=<?=time()?>"></script>
+        <?php
+        if(isset($script)) {
+        ?>
+            <!-- custom script -->
+            <script type="text/javascript" src="<?=base_url()?>back/assets/js/<?=$script?>?v=<?=time()?>"></script>
+        <?php
+        }
+        ?>
 
     </body>
 

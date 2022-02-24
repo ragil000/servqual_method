@@ -12,6 +12,7 @@ class Auth extends CI_Controller {
         if($this->session->userdata('auth_signin')) {
 			redirect('dashboard');
 		}
+        $this->session->set_userdata(['old_url' => str_replace('/servqual_method/', '',$_SERVER['REQUEST_URI']), 'old_query' => $_SERVER['QUERY_STRING']]);
         $this->load->view('pages/signin');
     }
 
@@ -23,7 +24,6 @@ class Auth extends CI_Controller {
         ];
         
         $get_user = $this->Auth_model->signin($post);
-        // print_r($get_user->message);die;
         if($get_user->status) {
             $data_user = $get_user->data;
             if($data_user->role == 'admin') {
@@ -31,27 +31,28 @@ class Auth extends CI_Controller {
                   'auth_signin' => TRUE,
                   '_id' => $data_user->_id, 
                   'username' => $data_user->username,
-                  'role' => $data_user->role
+                  'role' => $data_user->role,
+                  'lab_id' => $data_user->lab_id,
+                  'lab_title' => $data_user->lab_title
                 ]);
                 redirect('dashboard');
-            }else if($data_user->role == 'user') {
+            }else if($data_user->role == 'super') {
                 $this->session->set_userdata([
                     'auth_signin' => TRUE,
                     '_id' => $data_user->_id, 
                     'username' => $data_user->username,
-                    'role' => $data_user->role,
-                    'lab_id' => $data_user->lab_id,
-                    'lab_title' => $data_user->lab_title
+                    'role' => $data_user->role
                 ]);
-                redirect('home?lab_id='.$data_user->lab_title);
+                redirect('dashboard');
             }else {
                 // session_destroy();
                 $this->session->set_flashdata(['flash_message' => TRUE, 'message' => $get_user->message]);
-                redirect('Auth');
+                redirect($this->session->userdata('old_url').($this->session->userdata('old_query') ? '?'.$this->session->userdata('old_query') : ''));
             }
         }else {
             // session_destroy();
             $this->session->set_flashdata(['flash_message' => TRUE, 'message' => $get_user->message]);
+            redirect($this->session->userdata('old_url').($this->session->userdata('old_query') ? '?'.$this->session->userdata('old_query') : ''));
             redirect('Auth');
         }
     }

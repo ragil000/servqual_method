@@ -58,10 +58,20 @@ $route['auth/(:any)'] = 'Auth/$1';
 
 $route['dashboard']                       = 'dashboard/index';
 
-$route['content/kompetensi']              = 'Content/index';
-$route['content/createKompetensi']        = 'Content/createKompetensi';
-$route['content/postKompetensi']          = 'Content/postKompetensi';
-$route['content/updateKompetensi/(:num)']        = 'Content/updateKompetensi/$1';
+$route['questionnaire/questionnaire']              = 'Questionnaire/index';
+$route['questionnaire/questionnaire/create']        = 'Questionnaire/create';
+$route['questionnaire/questionnaire/post']          = 'Questionnaire/post';
+$route['questionnaire/questionnaire/activate']          = 'Questionnaire/activate';
+$route['questionnaire/questionnaire/delete']          = 'Questionnaire/delete';
+$route['questionnaire/questionnaire/(:num)']              = 'Questionnaire/index/$1';
+
+$route['questionnaire/question/test_data']              = 'Question/test_data';
+$route['questionnaire/question']              = 'Question/index';
+$route['questionnaire/question/create']        = 'Question/create';
+$route['questionnaire/question/post']          = 'Question/post';
+$route['questionnaire/question/activate']          = 'Question/activate';
+$route['questionnaire/question/delete']          = 'Question/delete';
+$route['questionnaire/question/(:num)']              = 'Question/index/$1';
 
 $route['content/materi']              = 'Content/materi';
 $route['content/createMateri']        = 'Content/createMateri';

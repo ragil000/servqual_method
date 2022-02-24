@@ -4,23 +4,27 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Auth_model extends CI_Model{
 
     public function signin($post) {
-        $allow_post = ['username', 'password', 'lab_id'];
+        $allow_post = ['username', 'password'];
+        $optional_post = ['lab_id'];
         $check_post = true;
         $count_post = 0;
+
         foreach($post as $key => $value) {
             if(!in_array($key, $allow_post)) {
-                $results = (object) [
-                    'status' => false,
-                    'message' => 'data ['.$key.'] tidak dikenali',
-                    'response_code' => 400
-                ];
-                return $results;
+                if(!in_array($key, $optional_post)) {
+                    $results = (object) [
+                        'status' => false,
+                        'message' => 'data ['.$key.'] tidak dikenali',
+                        'response_code' => 400
+                    ];
+                    return (object) $results;
+                }
+            }else {
+                if(empty($value)){
+                    $check_post = false;
+                }
+                $count_post++;
             }
-            
-            if(empty($value)){
-                $check_post = false;
-            }
-            $count_post++;
         }
 
         if($count_post != count($allow_post)) {
@@ -39,7 +43,10 @@ class Auth_model extends CI_Model{
         $check_role = true;
         $check_password = false;
 
+                $this->db->join('labs', 'labs._id=users.lab_id', 'left');
+                $this->db->select('users._id, labs._id as lab_id, users.username, users.role, users.password, users.status, labs.title as lab_title');
         $get = $this->db->get_where('users', ['username' => $post['username']]);
+    
         if($get->num_rows() > 0) {
             $row = $get->row();
             if($row->role == 'admin') {
@@ -48,21 +55,27 @@ class Auth_model extends CI_Model{
                 }else {
                     $check_role = false;
                 }
-            }else if($row->role == 'user') {
+            }else if($row->role == 'super') {
                 $check_password = password_verify($post['password'], $row->password);
             }
 
             if($check_role && $check_password) {
+                $data = (object) [
+                    '_id' => $row->_id,
+                    'username' => $row->username,
+                    'role' => $row->role,
+                    'status' => $row->status
+                ];
+
+                if($row->role == 'admin') {
+                    $data->lab_id = $row->lab_id;
+                    $data->lab_title = $row->lab_title;
+                }
+
                 $results = (object) [
                     'status' => true,
                     'message' => 'berhasil masuk',
-                    'data' => (object) [
-                        '_id' => $row->_id,
-                        'username' => $row->username,
-                        'role' => $row->role,
-                        'status' => $row->status,
-                        'lab_id' => $post['lab_id']
-                    ],
+                    'data' => $data,
                     'response_code' => 200
                 ];
             }else {
@@ -79,18 +92,19 @@ class Auth_model extends CI_Model{
                 'response_code' => 400
             ];
         }
+
         return (object) $results;
     }
 
     public function signup($post) {
-        $allowPost = ['username', 'password', 'role'];
-        $optionalPost = ['lab_id'];
-        $checkPost = true;
-        $countPost = 0;
+        $allow_post = ['username', 'password', 'role'];
+        $optional_post = ['lab_id'];
+        $check_post = true;
+        $count_post = 0;
         $post['role'] = 'user';
         foreach($post as $key => $value) {
-            if(!in_array($key, $allowPost)) {
-                if(!in_array($key, $optionalPost)) {
+            if(!in_array($key, $allow_post)) {
+                if(!in_array($key, $optional_post)) {
                     $results = (object) [
                         'status' => false,
                         'message' => 'data ['.$key.'] tidak dikenali',
@@ -98,21 +112,21 @@ class Auth_model extends CI_Model{
                     ];
                     return (object) $results;
                 }else {
-                    $countPost--;
+                    $count_post--;
                 }
             }
             
             if(empty($value)){
-                $checkPost = false;
+                $check_post = false;
             }
-            $countPost++;
+            $count_post++;
         }
 
         if($count_post != count($allow_post)) {
             $check_post = false;
         }
 
-        if(!$checkPost) {
+        if(!$check_post) {
             $results = (object) [
                 'status' => false,
                 'message' => 'data request salah',
