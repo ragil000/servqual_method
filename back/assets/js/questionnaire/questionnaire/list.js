@@ -13,10 +13,44 @@ function detailModal(url) {
     window.location = url
 }
 
+function beforePublish(url) {
+    Swal.fire({
+        title: 'Anda yakin?',
+        text: "Saat kuesioner ini dipublis, tidak dapat diurungkan.",
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, aktifkan',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.value) {
+            window.location = url
+        }
+    })
+}
+
 function beforeActivate(url) {
     Swal.fire({
         title: 'Anda yakin?',
         text: "Saat kuesioner ini diaktifkan, kuesioner yang lain otomatis akan non aktif.",
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, aktifkan',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.value) {
+            window.location = url
+        }
+    })
+}
+
+function beforeNonactivate(url) {
+    Swal.fire({
+        title: 'Anda yakin?',
+        text: "Yakin ingin non-aktif kan data ini?.",
         icon: 'info',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',

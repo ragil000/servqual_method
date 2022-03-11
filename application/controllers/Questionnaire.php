@@ -13,8 +13,14 @@ class Questionnaire extends CI_Controller {
 
 	public function index($page=1) {
         $this->session->set_userdata(['old_url' => str_replace('/servqual_method/', '',$_SERVER['REQUEST_URI']), 'old_query' => $_SERVER['QUERY_STRING']]);
-		$page = floor(($page/10) + 1);
-        $get_data				= $this->Questionnaire_model->get_data($page);
+		
+        $search = $this->input->post('search') || $this->session->userdata('search_questionnaire');
+        if($search) {
+            $this->session->set_userdata(['search_questionnaire' => $search]);
+        }
+
+        $page = floor(($page/10) + 1);
+        $get_data				= $this->Questionnaire_model->get_data($page, $search);
 
         //konfigurasi pagination
         $config['base_url'] = site_url('questionnaire/questionnaire'); //site url
@@ -61,6 +67,7 @@ class Questionnaire extends CI_Controller {
 	}
 
 	public function create() {
+        $this->session->set_userdata(['old_url' => str_replace('/servqual_method/', '',$_SERVER['REQUEST_URI']), 'old_query' => $_SERVER['QUERY_STRING']]);
 		$data['head'] 			= 'Kuesioner';
 		$data['content']		= 'Daftar Kuesioner';
 		$data['title']			= 'Kuesioner';
@@ -95,7 +102,7 @@ class Questionnaire extends CI_Controller {
 			];
 		}
 		$this->session->set_flashdata(['flash_message' => TRUE, 'status' => ($results->status ? 'success' : 'warning'), 'message' => $results->message]);
-		redirect(base_url('questionnaire/questionnaire/create'));
+        redirect($this->session->userdata('old_url'));
 	}
 
     public function activate() {
@@ -111,7 +118,39 @@ class Questionnaire extends CI_Controller {
         }
 
         $this->session->set_flashdata(['flash_message' => TRUE, 'status' => ($results->status ? 'success' : 'warning'), 'message' => $results->message]);
-		redirect($this->session->userdata('old_url').($this->session->userdata('old_query') ? '?'.$this->session->userdata('old_query') : ''));
+		redirect($this->session->userdata('old_url'));
+    }
+
+    public function nonactivate() {
+        $_id = $this->input->get('_id');
+        $results = (object) [
+            'status'	=> FALSE,
+            'message'	=> 'parameter _id tidak ditemukan.'
+        ];
+
+        if($_id) {
+            $_id = _decrypt($_id, 'penyihir-cinta', true);
+            $results = $this->Questionnaire_model->nonactivate_data($_id);
+        }
+
+        $this->session->set_flashdata(['flash_message' => TRUE, 'status' => ($results->status ? 'success' : 'warning'), 'message' => $results->message]);
+		redirect($this->session->userdata('old_url'));
+    }
+
+    public function publish() {
+        $_id = $this->input->get('_id');
+        $results = (object) [
+            'status'	=> FALSE,
+            'message'	=> 'parameter _id tidak ditemukan.'
+        ];
+
+        if($_id) {
+            $_id = _decrypt($_id, 'penyihir-cinta', true);
+            $results = $this->Questionnaire_model->publish_data($_id);
+        }
+
+        $this->session->set_flashdata(['flash_message' => TRUE, 'status' => ($results->status ? 'success' : 'warning'), 'message' => $results->message]);
+		redirect($this->session->userdata('old_url'));
     }
 
     public function delete() {
@@ -127,6 +166,6 @@ class Questionnaire extends CI_Controller {
         }
 
         $this->session->set_flashdata(['flash_message' => TRUE, 'status' => ($results->status ? 'success' : 'warning'), 'message' => $results->message]);
-		redirect($this->session->userdata('old_url').($this->session->userdata('old_query') ? '?'.$this->session->userdata('old_query') : ''));
+		redirect($this->session->userdata('old_url'));
     }
 }

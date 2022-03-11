@@ -26,6 +26,7 @@ class Auth extends CI_Controller {
         $get_user = $this->Auth_model->signin($post);
         if($get_user->status) {
             $data_user = $get_user->data;
+
             if($data_user->role == 'admin') {
                 $this->session->set_userdata([
                   'auth_signin' => TRUE,
@@ -35,7 +36,7 @@ class Auth extends CI_Controller {
                   'lab_id' => $data_user->lab_id,
                   'lab_title' => $data_user->lab_title
                 ]);
-                redirect('dashboard');
+                redirect(($this->session->userdata('old_url') ? $this->session->userdata('old_url') : 'dashboard'));
             }else if($data_user->role == 'super') {
                 $this->session->set_userdata([
                     'auth_signin' => TRUE,
@@ -43,16 +44,15 @@ class Auth extends CI_Controller {
                     'username' => $data_user->username,
                     'role' => $data_user->role
                 ]);
-                redirect('dashboard');
+                redirect(($this->session->userdata('old_url') ? $this->session->userdata('old_url') : 'dashboard'));
             }else {
                 // session_destroy();
                 $this->session->set_flashdata(['flash_message' => TRUE, 'message' => $get_user->message]);
-                redirect($this->session->userdata('old_url').($this->session->userdata('old_query') ? '?'.$this->session->userdata('old_query') : ''));
+                redirect('Auth');
             }
         }else {
             // session_destroy();
             $this->session->set_flashdata(['flash_message' => TRUE, 'message' => $get_user->message]);
-            redirect($this->session->userdata('old_url').($this->session->userdata('old_query') ? '?'.$this->session->userdata('old_query') : ''));
             redirect('Auth');
         }
     }

@@ -9,19 +9,29 @@ class Question extends CI_Controller {
 			redirect('Auth');
 		}
 		$this->load->model('Questionnaire_model');
+		$this->load->model('Dimension_model');
 		$this->load->model('Question_model');
 	}
 
 	public function index($page=1) {
+        $this->session->set_userdata(['old_url' => str_replace('/servqual_method/', '',$_SERVER['REQUEST_URI']), 'old_query' => $_SERVER['QUERY_STRING']]);
+        
+        $search = $this->input->post('search') || $this->session->userdata('search_question');
+        if($search) {
+            $this->session->set_userdata(['search_question' => $search]);
+        }
+
         $questionnaire_id = $this->input->get('questionnaire_id');
         if($questionnaire_id) {
             $questionnaire_id = _decrypt($questionnaire_id, 'penyihir-cinta', true);
-            $this->session->set_userdata(['questionnaire_id' => $questionnaire_id]);
+            $this->session->set_userdata(['current_questionnaire_id' => $questionnaire_id]);
         }
+        // print_r($questionnaire_id);die;
+
+        $data['current_questionnaire'] = $this->Questionnaire_model->get_default_questionnaire();
         
-        $this->session->set_userdata(['old_url' => str_replace('/servqual_method/', '',$_SERVER['REQUEST_URI']), 'old_query' => $_SERVER['QUERY_STRING']]);
 		$page = floor(($page/10) + 1);
-        $get_data				= $this->Question_model->get_data($page);
+        $get_data				= $this->Question_model->get_data($page, $search, $data['current_questionnaire']->data->_id);
 
         //konfigurasi pagination
         $config['base_url'] = site_url('questionnaire/question'); //site url
@@ -59,6 +69,7 @@ class Question extends CI_Controller {
 		$data['head'] 			= 'Pertanyaan';
 		$data['content']		= 'Daftar Pertanyaan Kuesioner';
 		$data['title']			= 'Pertanyaan';
+		$data['style']			= 'questionnaire/question/list.css';
 		$data['css_vendors']	= ['select2/css/select2.min.css'];
 		$data['js_vendors']	= ['sweetalert2/sweetalert2.all.min.js', 'select2/js/select2.min.js'];
 		$data['script']			= 'questionnaire/question/list.js';
@@ -68,21 +79,53 @@ class Question extends CI_Controller {
 		$this->load->view('templates/footer');
 	}
 
-    public function test_data() {
+    public function get_data_questionnaire() {
+        $is_publish = $this->input->get('is_publish');
         $page = $this->input->get('page');
         $search = $this->input->get('search');
 
-        $data = $this->Questionnaire_model->get_data($page, $search);
+        $data = $this->Questionnaire_model->get_data($page, $search, $is_publish);
+        if($data->status) {
+            $newData = [];
+            foreach($data->data as $value) {
+                $value->_id = urlencode(_encrypt($value->_id, 'penyihir-cinta', true));
+                array_push($newData, $value);
+            }
+            $data->data = $newData;
+        }
+
+        echo json_encode($data);
+    }
+
+    public function get_data_dimension() {
+        $page = $this->input->get('page');
+        $search = $this->input->get('search');
+
+        $data = $this->Dimension_model->get_data($page, $search);
+
         echo json_encode($data);
     }
 
 	public function create() {
-		$data['head'] 			= 'Kuesioner';
-		$data['content']		= 'Daftar Kuesioner';
-		$data['title']			= 'Kuesioner';
-		$data['script']			= 'questionnaire/questionnaire/create.js';
+        $this->session->set_userdata(['old_url' => str_replace('/servqual_method/', '',$_SERVER['REQUEST_URI']), 'old_query' => $_SERVER['QUERY_STRING']]);
+        $_id = $this->input->get('_id');
+
+        if($_id) {
+            $_id = _decrypt($_id, 'penyihir-cinta', true);
+            $get_data = $this->Question_model->get_detail_data($_id);
+            if($get_data->status) {
+                $data['old_data'] = $get_data->data;
+            }
+        }
+		$data['head'] 			= 'Pertanyaan';
+		$data['content']		= 'Daftar Pertanyaan Kuesioner';
+		$data['title']			= 'Pertanyaan';
+		$data['style']			= 'questionnaire/question/create.css';
+        $data['css_vendors']	= ['select2/css/select2.min.css'];
+		$data['js_vendors']	    = ['select2/js/select2.min.js'];
+		$data['script']			= 'questionnaire/question/create.js';
 		$this->load->view('templates/header', $data);
-		$this->load->view('pages/questionnaire/questionnaire/create');
+		$this->load->view('pages/questionnaire/question/create');
 		$this->load->view('templates/footer');
 	}
 
@@ -92,15 +135,15 @@ class Question extends CI_Controller {
 			'message'	=> 'Data berhasil di tambahkan.'
 		];
 
-		$this->form_validation->set_rules('start_periode', 'Periode Awal', 'trim|required');
-		$this->form_validation->set_rules('end_periode', 'Periode Akhir', 'trim|required');
+		$this->form_validation->set_rules('dimension_id', 'Dimensi', 'trim|required');
+		$this->form_validation->set_rules('question', 'Pertanyaan', 'trim|required');
 		if($this->form_validation->run()) {
 			$post = [
-                'start_periode' => $this->input->post('start_periode'),
-                'end_periode' => $this->input->post('end_periode'),
-                'status' => 'active',
+                'dimension_id' => $this->input->post('dimension_id'),
+                'question' => $this->input->post('question'),
+                'questionnaire_id' => $this->session->userdata('current_questionnaire_id'),
                 'lab_id' => $this->session->userdata('lab_id'),
-                'created_by' => $this->session->userdata('_id')
+                'created_by' => $this->session->userdata('_id'),
             ];
 
 			$results = $this->Question_model->post_data($post);
@@ -111,24 +154,37 @@ class Question extends CI_Controller {
 			];
 		}
 		$this->session->set_flashdata(['flash_message' => TRUE, 'status' => ($results->status ? 'success' : 'warning'), 'message' => $results->message]);
-		redirect(base_url('questionnaire/questionnaire/create'));
+		redirect(base_url('questionnaire/question/create'));
 	}
 
-    public function activate() {
-        $_id = $this->input->get('_id');
-        $results = (object) [
-            'status'	=> FALSE,
-            'message'	=> 'parameter _id tidak ditemukan.'
-        ];
+    public function put() {
+		$results	= (object) [
+			'status'	=> TRUE,
+			'message'	=> 'Data berhasil di diubah.'
+		];
 
-        if($_id) {
-            $_id = _decrypt($_id, 'penyihir-cinta', true);
-            $results = $this->Question_model->activate_data($_id);
-        }
+		$this->form_validation->set_rules('dimension_id', 'Dimensi', 'trim|required');
+		$this->form_validation->set_rules('question', 'Pertanyaan', 'trim|required');
+		if($this->form_validation->run()) {
+			$post = [
+                '_id' => $this->input->post('_id'),
+                'dimension_id' => $this->input->post('dimension_id'),
+                'question' => $this->input->post('question'),
+                'questionnaire_id' => $this->input->post('questionnaire_id'),
+                'lab_id' => $this->input->post('lab_id'),
+                'updated_by' => $this->session->userdata('_id'),
+            ];
 
-        $this->session->set_flashdata(['flash_message' => TRUE, 'status' => ($results->status ? 'success' : 'warning'), 'message' => $results->message]);
-		redirect($this->session->userdata('old_url').($this->session->userdata('old_query') ? '?'.$this->session->userdata('old_query') : ''));
-    }
+			$results = $this->Question_model->put_data($post);
+		}else {
+			$results = (object) [
+				'status'	=> FALSE,
+				'message'	=> 'data yang diinput tidak valid.'
+			];
+		}
+		$this->session->set_flashdata(['flash_message' => TRUE, 'status' => ($results->status ? 'success' : 'warning'), 'message' => $results->message]);
+        redirect($this->session->userdata('old_url'));
+	}
 
     public function delete() {
         $_id = $this->input->get('_id');
@@ -143,6 +199,6 @@ class Question extends CI_Controller {
         }
 
         $this->session->set_flashdata(['flash_message' => TRUE, 'status' => ($results->status ? 'success' : 'warning'), 'message' => $results->message]);
-		redirect($this->session->userdata('old_url').($this->session->userdata('old_query') ? '?'.$this->session->userdata('old_query') : ''));
+		redirect($this->session->userdata('old_url'));
     }
 }

@@ -7,7 +7,7 @@
                                         <h3 class="mb-0 mt-2"><?= $title ?></h3>
                                     </div>
                                     <div class="col-lg-9 text-left">
-                                        <a href="<?= base_url('questionnaire/questionnaire/create') ?>" class="btn btn-primary"><i class="ni ni-single-copy-04"></i> Tambah</a>
+                                        <a href="<?= base_url('questionnaire/questionnaire/create') ?>" class="btn btn-primary btn-icon"><span class="btn-inner--icon"><i class="ni ni-single-copy-04"></i></span> Tambah</a>
                                     </div>
                                 </div>
                             </div>
@@ -39,18 +39,30 @@
                                         if (!empty($data)) {
                                             foreach ($data as $value) {
                                                 $is_delete = '';
+                                                $is_publish = '';
                                                 $is_activate = '';
+                                                $is_nonactivate = '';
+                                                $see_as_user = 'hidden';
+                                                $hidden_pubish_button = '';
+                                                if($value->is_publish == 'yes' && $value->status == 'active') {
+                                                    $see_as_user = '';
+                                                    $hidden_pubish_button = 'hidden';
+                                                }
+                                                if($value->is_publish == 'yes') $is_publish = 'disabled';
                                                 if($value->is_delete == 'no') $is_delete = 'disabled';
                                                 if($value->status == 'active') $is_activate = 'hidden';
+                                                if($value->status == 'nonactive') $is_nonactivate = 'hidden';
                                         ?>
                                                 <tr>
                                                     <td><?= _dateShortID($value->start_periode, false) . ' / ' . _dateShortID($value->end_periode, false) ?></td>
                                                     <td><?= $is_active[$value->status] ?></td>
                                                     <td class="text-right">
-                                                        <!-- <a href="<?= base_url('/news/detail/' . $value->_id) ?>" target="_blank" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a> -->
-                                                        <a href="#" class="btn btn-sm btn-info" data-toggle="tooltip" data-placement="top" title="Aktifkan data" <?=$is_activate?> onclick="beforeActivate('<?= base_url('questionnaire/questionnaire/activate?_id='._encrypt($value->_id, 'penyihir-cinta', true)) ?>')"><i class="ni ni-button-play"></i></a>
-                                                        <a href="#" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Lihat list pertanyaan" onclick="detailModal('<?= base_url('questionnaire/question?questionnaire_id='._encrypt($value->_id, 'penyihir-cinta', true)) ?>')"><i class="fa fa-eye"></i></a>
-                                                        <a href="#" class="btn btn-sm btn-danger <?=$is_delete?>" data-toggle="tooltip" data-placement="top" title="Hapus data" onclick="beforeDelete('<?= base_url('questionnaire/questionnaire/delete?_id='._encrypt($value->_id, 'penyihir-cinta', true)) ?>')"><i class="fa fa-trash"></i></a>
+                                                        <a href="#" class="btn btn-sm btn-info <?=$is_publish?>" <?=$hidden_pubish_button?> data-toggle="tooltip" data-placement="top" title="Publish data" onclick="beforePublish('<?= base_url('questionnaire/questionnaire/publish?_id='.urlencode(_encrypt($value->_id, 'penyihir-cinta', true))) ?>')"><i class="ni ni-notification-70"></i></a>
+                                                        <a href="<?= base_url('as_user') ?>" target="_blank" class="btn btn-sm btn-info" <?=$see_as_user?> data-toggle="tooltip" data-placement="top" title="Lihat sebagai user"><i class="ni ni-send"></i></a>
+                                                        <a href="#" class="btn btn-sm btn-primary" <?=$is_activate?> data-toggle="tooltip" data-placement="top" title="Aktifkan data" onclick="beforeActivate('<?= base_url('questionnaire/questionnaire/activate?_id='.urlencode(_encrypt($value->_id, 'penyihir-cinta', true))) ?>')"><i class="ni ni-button-play"></i></a>
+                                                        <a href="#" class="btn btn-sm btn-primary" <?=$is_nonactivate?> data-toggle="tooltip" data-placement="top" title="Non-aktifkan data" onclick="beforeNonactivate('<?= base_url('questionnaire/questionnaire/nonactivate?_id='.urlencode(_encrypt($value->_id, 'penyihir-cinta', true))) ?>')"><i class="ni ni-button-pause"></i></a>
+                                                        <a href="#" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Lihat list pertanyaan" onclick="detailModal('<?= base_url('questionnaire/question?questionnaire_id='.urlencode(_encrypt($value->_id, 'penyihir-cinta', true))) ?>')"><i class="fa fa-eye"></i></a>
+                                                        <a href="#" class="btn btn-sm btn-danger <?=$is_delete?>" data-toggle="tooltip" data-placement="top" title="Hapus data" onclick="beforeDelete('<?= base_url('questionnaire/questionnaire/delete?_id='.urlencode(_encrypt($value->_id, 'penyihir-cinta', true))) ?>')"><i class="fa fa-trash"></i></a>
                                                     </td>
                                                 </tr>
                                             <?php

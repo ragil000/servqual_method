@@ -58,51 +58,49 @@ $route['auth/(:any)'] = 'Auth/$1';
 
 $route['dashboard']                       = 'dashboard/index';
 
+$route['user']              = 'User/index';
+$route['user/create']        = 'User/create';
+$route['user/post']          = 'User/post';
+$route['user/put']          = 'User/put';
+$route['user/delete']          = 'User/delete';
+$route['user/(:num)']              = 'User/index/$1';
+
+$route['laboratorium']              = 'Laboratorium/index';
+$route['laboratorium/create']        = 'Laboratorium/create';
+$route['laboratorium/post']          = 'Laboratorium/post';
+$route['laboratorium/put']          = 'Laboratorium/put';
+$route['laboratorium/delete']          = 'Laboratorium/delete';
+$route['laboratorium/(:num)']              = 'Laboratorium/index/$1';
+
 $route['questionnaire/questionnaire']              = 'Questionnaire/index';
 $route['questionnaire/questionnaire/create']        = 'Questionnaire/create';
 $route['questionnaire/questionnaire/post']          = 'Questionnaire/post';
 $route['questionnaire/questionnaire/activate']          = 'Questionnaire/activate';
+$route['questionnaire/questionnaire/nonactivate']          = 'Questionnaire/nonactivate';
+$route['questionnaire/questionnaire/publish']          = 'Questionnaire/publish';
 $route['questionnaire/questionnaire/delete']          = 'Questionnaire/delete';
 $route['questionnaire/questionnaire/(:num)']              = 'Questionnaire/index/$1';
 
-$route['questionnaire/question/test_data']              = 'Question/test_data';
+$route['questionnaire/question/get_data_questionnaire']              = 'Question/get_data_questionnaire';
+$route['questionnaire/question/get_data_dimension']              = 'Question/get_data_dimension';
 $route['questionnaire/question']              = 'Question/index';
 $route['questionnaire/question/create']        = 'Question/create';
 $route['questionnaire/question/post']          = 'Question/post';
-$route['questionnaire/question/activate']          = 'Question/activate';
+$route['questionnaire/question/put']          = 'Question/put';
 $route['questionnaire/question/delete']          = 'Question/delete';
 $route['questionnaire/question/(:num)']              = 'Question/index/$1';
 
-$route['content/materi']              = 'Content/materi';
-$route['content/createMateri']        = 'Content/createMateri';
-$route['content/postMateri']          = 'Content/postMateri';
-$route['content/updateMateri/(:num)']        = 'Content/updateMateri/$1';
+$route['analysis/gap5/get_data_summary_servqual']              = 'Gap5/get_data_summary_servqual';
+$route['analysis/gap5']              = 'Gap5/filter';
+$route['analysis/gap5/list']              = 'Gap5/index';
+$route['analysis/gap5/list/(:num)']              = 'Gap5/index/$1';
 
-$route['content/tentang']              = 'Content/tentang';
-$route['content/createTentang']        = 'Content/createTentang';
-$route['content/postTentang']          = 'Content/postTentang';
-$route['content/updateTentang/(:num)']        = 'Content/updateTentang/$1';
+$route['analysis/ranking']              = 'Ranking/index';
+$route['analysis/ranking/(:num)']              = 'Ranking/index/$1';
 
-$route['content/bantuan']              = 'Content/bantuan';
-$route['content/createBantuan']        = 'Content/createBantuan';
-$route['content/postBantuan']          = 'Content/postBantuan';
-$route['content/updateBantuan/(:num)']        = 'Content/updateBantuan/$1';
-
-$route['content/putData']          = 'Content/putData';
-
-$route['quist'] = 'Quist/index';
-$route['quist/(:num)'] = 'Quist/index/$1';
-$route['quist/(:any)'] = 'Quist/$1';
-$route['quist/(:any)/(:num)'] = 'Quist/$1/$2';
-
-$route['quast'] = 'Quast/index';
-$route['quast/(:num)'] = 'Quast/index/$1';
-$route['quast/(:any)'] = 'Quast/$1';
-$route['quast/(:any)/(:num)'] = 'Quast/$1/$2';
-
-$route['history'] = 'History/index';
-$route['history/(:num)'] = 'History/index/$1';
-$route['history/(:any)'] = 'History/$1';
-$route['history/(:any)/(:num)'] = 'History/$1/$2';
+$route['as_user']              = 'AsUser/index';
+$route['as_user/set_user']              = 'AsUser/set_user';
+$route['as_user/reset_user']              = 'AsUser/reset_user';
+$route['as_user/post']              = 'AsUser/post';
 
 // end

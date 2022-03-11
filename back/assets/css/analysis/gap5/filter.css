@@ -1,0 +1,14 @@
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    font-size: .875rem;
+    height: calc(2.75rem + 2px);
+    padding: 0.625rem 0.75rem;
+    transition: all .2s cubic-bezier(.68, -.55, .265, 1.55);
+}
+
+.select2-container--default .select2-selection--single {
+    border: 1px solid #cad1d7;
+    font-size: .875rem;
+    height: calc(2.75rem + 2px);
+    padding: 0.625rem 0.75rem;
+    transition: all .2s cubic-bezier(.68, -.55, .265, 1.55);
+}

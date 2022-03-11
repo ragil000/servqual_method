@@ -29,6 +29,37 @@ function _dateID(date){
     return hari[tanggal.getDay()]+', '+tanggal.getDate()+' '+bulan[tanggal.getMonth()]+' '+tanggal.getFullYear();
 }
 
+function _dateShortID(date, isDay=true){
+    let bulan = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'Mei',
+        'Jun',
+        'Jul',
+        'Agu',
+        'Sep',
+        'Okt',
+        'Nov',
+        'Des'
+    ];
+
+    let hari = [
+        'Ming',
+        'Sen',
+        'Sel',
+        'Rab',
+        'Kam',
+        'Jum',
+        'Sab',
+    ];
+
+    let tanggal = new Date(date);
+
+    return (isDay ? hari[tanggal.getDay()]+', ' : '')+tanggal.getDate()+' '+bulan[tanggal.getMonth()]+' '+tanggal.getFullYear();
+}
+
 function _splitText(string, limit = 100) {
 
     string = string.replace(/(<([^>]+)>)/ig,"")
@@ -44,3 +75,8 @@ function _splitText(string, limit = 100) {
     }
     return string
 }
+
+const decimalFormatter = new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 2,      
+    maximumFractionDigits: 2,
+ })

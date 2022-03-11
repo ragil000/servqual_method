@@ -8,7 +8,7 @@
     <meta name="author" content="Creative Tim">
     <title>Servqual Method | Halaman Signin</title>
     <!-- Favicon -->
-    <!-- <link href="<?= base_url('back') ?>/assets/img/brand/logo-pesri.png" rel="icon" type="image/png"> -->
+    <link href="<?= base_url() ?>back/assets/img/brand/logo.ico" rel="icon" type="image/png">
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
     <!-- Icons -->

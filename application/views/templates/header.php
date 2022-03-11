@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Website resmi Litbang kabupaten Bombana, Sulawesi Tenggara">
     <meta name="author" content="Creative Tim">
-    <title>Servqual Method | Admin</title>
+    <title>Servqual Method | <?=isset($title) ? $title : 'Admin'?></title>
     <!-- Favicon -->
-    <!-- <link href="<?= base_url() ?>back/assets/img/brand/logo.png" rel="icon" type="image/png"> -->
+    <link href="<?= base_url() ?>back/assets/img/brand/logo.ico" rel="icon" type="image/png">
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
     <!-- Icons -->
@@ -96,6 +96,15 @@
                     </div>
                 </div>
 
+                <?php
+                    $admin_menu = 'hidden';
+                    $super_menu = 'hidden';
+                    if($this->session->userdata('auth_signin')) {
+                        if($this->session->userdata('role') == 'admin') $admin_menu = '';
+                        else if($this->session->userdata('role') == 'super') $super_menu = '';
+                    }
+                ?>
+
                 <!-- Navigation -->
                 <ul class="navbar-nav">
                     <li class="nav-item">
@@ -103,7 +112,34 @@
                             <i class="ni ni-tv-2 text-purple"></i> Beranda
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" <?=$super_menu?>>
+                        <a class="nav-link" id="laboratorium-menu" href="<?= base_url('laboratorium') ?>">
+                            <i class="ni ni-atom text-warning"></i> Laboratorium
+                        </a>
+                    </li>
+                    <li class="nav-item" <?=$super_menu?>>
+                        <a class="nav-link active" id="account-menu" href="#navbar-account" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-account">
+                            <i class="ni ni-active-40 text-primary"></i>
+                            <span class="nav-link-text">Akun</span>
+                        </a>
+                        <div class="collapse show" id="navbar-account">
+                            <ul class="nav nav-sm flex-column">
+                                <li class="nav-item">
+                                    <a href="<?=base_url('User?role=super')?>" id="super_accounts" class="nav-link">
+                                        <i class="ni ni-align-left-2 text-primary"></i>
+                                        <span class="sidenav-normal"> Super Admin </span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="<?=base_url('User?role=admin')?>" id="admin_accounts" class="nav-link">
+                                        <i class="ni ni-align-left-2 text-primary"></i>
+                                        <span class="sidenav-normal"> Admin Kuesioner </span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item" <?=$admin_menu?>>
                         <a class="nav-link active" id="questionnaire-menu" href="#navbar-questionnaire" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-questionnaire">
                             <i class="ni ni-collection text-primary"></i>
                             <span class="nav-link-text">Kuesioner</span>
@@ -125,7 +161,7 @@
                             </ul>
                         </div>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" <?=$admin_menu?>>
                         <a class="nav-link active" id="analysis-menu" href="#navbar-analysis" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-analysis">
                             <i class="ni ni-chart-bar-32 text-warning"></i>
                             <span class="nav-link-text">Analisis</span>
@@ -133,13 +169,13 @@
                         <div class="collapse show" id="navbar-analysis">
                             <ul class="nav nav-sm flex-column">
                                 <li class="nav-item">
-                                    <a href="#" id="gap5" class="nav-link">
+                                    <a href="<?=base_url('analysis/gap5')?>" id="gap5" class="nav-link">
                                         <i class="ni ni-align-left-2 text-warning"></i>
                                         <span class="sidenav-normal"> Uji GAP 5 </span>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" id="ranking" class="nav-link">
+                                    <a href="<?=base_url('analysis/ranking')?>" id="ranking" class="nav-link">
                                         <i class="ni ni-align-left-2 text-warning"></i>
                                         <span class="sidenav-normal"> Perangkingan </span>
                                     </a>
@@ -147,11 +183,11 @@
                             </ul>
                         </div>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link" id="report-history" href="#">
                             <i class="ni ni-calendar-grid-58 text-info"></i> Laporan
                         </a>
-                    </li>
+                    </li> -->
                 </ul>
                 <!-- Divider -->
                 <hr class="my-3">
@@ -217,7 +253,7 @@
 
                     <!-- Card stats -->
                     <div class="row justify-content-center">
-                        <div class="col-xl-3 col-lg-6">
+                        <!-- <div class="col-xl-3 col-lg-6">
                             <div class="card card-stats mb-4 mb-xl-0">
                                 <div class="card-body">
                                     <div class="row">
@@ -236,7 +272,7 @@
                                     </p>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                     </div>
 

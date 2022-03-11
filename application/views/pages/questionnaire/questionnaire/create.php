@@ -31,8 +31,8 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-12 text-right">
-                            <button type="button" onclick="window.location='<?= base_url('questionnaire/questionnaire') ?>'" class="btn btn-warning mt-4">Kembali</button>
-                            <button type="submit" class="btn btn-default mt-4">Simpan</button>
+                            <button type="button" onclick="window.location='<?= base_url('questionnaire/questionnaire') ?>'" class="btn btn-warning btn-icon mt-4"><span class="btn-inner--icon"><i class="ni ni-bold-left"></i></span> Kembali</button>
+                            <button type="submit" class="btn btn-default btn-icon mt-4"><span class="btn-inner--icon"><i class="ni ni-cloud-upload-96"></i></span> Simpan</button>
                         </div>
                     </div>
                 </div>

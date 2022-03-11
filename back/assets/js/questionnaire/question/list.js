@@ -12,7 +12,7 @@ $(document).ready(function() {
 
     $('.select2').select2({
         ajax: {
-            url: `${base_url}questionnaire/question/test_data`,
+            url: `${base_url}questionnaire/question/get_data_questionnaire`,
             dataType: 'json',
             type: 'GET',
             data: function (params) {
@@ -25,15 +25,15 @@ $(document).ready(function() {
               return query;
             },
             processResults: function (data, params) {
-                console.log('sasas', data)
+                console.log('data', data)
                 params.page = params.page || 1;
-                var res = data.data.map(function (item) {
-                    return {id: item._id, text: `${item.start_periode} / ${item.end_periode} ${(item.status == 'active' ? '(aktif)' : '')}`};
-                });
+                var res = data.total_data ? data.data.map(function (item) {
+                    return {id: item._id, text: `${_dateShortID(item.start_periode, false)} / ${_dateShortID(item.end_periode, false)} ${(item.status == 'active' ? '(aktif)' : '')}`};
+                }) : null;
                 return {
                     results: res,
                     pagination: {
-                        more: data.total_data_displayed > 0
+                        more: data.is_next
                     }
                 };
             }
@@ -41,16 +41,40 @@ $(document).ready(function() {
     });
 })
 
-function detailModal(menu_id, _id) {
-    $.get(base_api_url + 'content/detail/' + menu_id + '/' + _id).then((result) => {
-        result = JSON.parse(result)
-        let image = '<img class="card-img-top" style="width:100%; height:200px; object-fit:cover;" src="' + result[0].image + '" alt="Gambar">'
-        $('#title').html(result[0].title)
-        $('#date').html(_dateID(result[0].created_at))
-        $('#image').html(image)
-        $('#content').html(result[0].description)
-        $('#button-detail-modal').click()
-    })
+function detailModal(e) {
+    let value = $(e).data('value')
+    $('#modalDetailLabel').html('Detail')
+    $('#modalDetailText').html(value)
+    $('#modalDetail').modal('show')
+}
+
+function changeData(url, ...getQuery) {
+    if(getQuery.length > 0) {
+        let allQuery = getQuery.map((obj) => {
+            let query = ''
+            for (const [key, value] of Object.entries(obj)) {
+                let typeValue = typeof value
+                let actualValue = ''
+                if(typeValue == 'string') {
+                    actualValue = value
+                }else if(typeValue == 'object') {
+                    let elementType = value.type
+                    let elementId = value.id
+                    let getValueById = null
+                    if(elementType == 'select') {
+                        getValueById = $(`select[name=${elementId}] option`).filter(':selected').val()
+                    }else if(elementType == 'input') {
+                        getValueById = $(`#${elementId}]`).val()
+                    }
+                    actualValue = getValueById
+                }
+                query = `${key}=${actualValue}`
+            }
+            return query
+        })
+        url = `${url}?${allQuery.join('&')}`
+    }
+    window.location = url
 }
 
 function beforeActivate(url) {
@@ -81,6 +105,7 @@ function beforeDelete(url) {
         confirmButtonText: 'Ya, hapus',
         cancelButtonText: 'Batal'
     }).then((result) => {
+        console.log('url', url)
         if (result.value) {
             window.location = url
         }

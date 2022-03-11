@@ -8,8 +8,16 @@
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="form-group">
-                                            <select class="form-control select2" name="questionnaire_id" id="questionnaire_id">
-                                                <option selected>1</option>
+                                            <select class="form-control select2" name="questionnaire_id" onchange="changeData('<?=base_url('questionnaire/question')?>', {'questionnaire_id': {'type': 'select', 'id': 'questionnaire_id'}})" id="questionnaire_id">
+                                                <?php
+                                                $is_delete = '';
+                                                if($current_questionnaire->status) {
+                                                    if($current_questionnaire->data->is_publish == 'yes') $is_delete = 'disabled';
+                                                ?>
+                                                <option selected value="<?=$current_questionnaire->data->_id?>"><?=_dateShortID($current_questionnaire->data->start_periode, false).' / '._dateShortID($current_questionnaire->data->end_periode, false).($current_questionnaire->data->status == 'active' ? ' (aktif)' : '')?></option>
+                                                <?php
+                                                }
+                                                ?>
                                                 <!-- <option>2</option>
                                                 <option>3</option>
                                                 <option>4</option>
@@ -18,7 +26,7 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-5 text-left">
-                                        <a href="<?= base_url('questionnaire/questionnaire/create') ?>" class="btn btn-primary"><i class="ni ni-single-copy-04"></i> Tambah</a>
+                                        <a href="<?= base_url('questionnaire/question/create') ?>" class="btn btn-primary btn-icon <?=$is_delete?>"><span class="btn-inner--icon"><i class="ni ni-single-copy-04"></i></span> Tambah</a>
                                     </div>
                                 </div>
                             </div>
@@ -35,33 +43,22 @@
                                 <table class="table align-items-center table-flush">
                                     <thead class="thead-light">
                                         <tr>
-                                            <th scope="col">Periode</th>
-                                            <th scope="col">Status</th>
+                                            <th scope="col">Pertanyaan</th>
+                                            <th scope="col">Dimensi</th>
                                             <th scope="col"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $is_active = [
-                                            'active' => 'Aktif',
-                                            'nonactive' => 'Tidak Aktif'
-                                        ];
-
                                         if (!empty($data)) {
                                             foreach ($data as $value) {
-                                                $is_delete = '';
-                                                $is_activate = '';
-                                                if($value->is_delete == 'no') $is_delete = 'disabled';
-                                                if($value->status == 'active') $is_activate = 'hidden';
                                         ?>
                                                 <tr>
-                                                    <td><?= _dateShortID($value->start_periode, false) . ' / ' . _dateShortID($value->end_periode, false) ?></td>
-                                                    <td><?= $is_active[$value->status] ?></td>
+                                                    <td><a href="#" onclick="detailModal(this)" data-value="<?=$value->question?>" data-toggle="tooltip" data-placement="top" title="Klik untuk melihat detail"><?= _limitText($value->question, 80) ?></a></td>
+                                                    <td><a href="#" onclick="detailModal(this)" data-value="<?=$value->dimension_description?>" data-toggle="tooltip" data-placement="top" title="Klik untuk melihat detail"><?= $value->dimension_title ?></a></td>
                                                     <td class="text-right">
-                                                        <!-- <a href="<?= base_url('/news/detail/' . $value->_id) ?>" target="_blank" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a> -->
-                                                        <a href="#" class="btn btn-sm btn-info" data-toggle="tooltip" data-placement="top" title="Aktifkan data" <?=$is_activate?> onclick="beforeActivate('<?= base_url('questionnaire/questionnaire/activate?_id='._encrypt($value->_id, 'penyihir-cinta', true)) ?>')"><i class="ni ni-button-play"></i></a>
-                                                        <a href="#" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Lihat list pertanyaan" onclick="detailModal('<?= $value->_id ?>')"><i class="fa fa-eye"></i></a>
-                                                        <a href="#" class="btn btn-sm btn-danger <?=$is_delete?>" data-toggle="tooltip" data-placement="top" title="Hapus data" onclick="beforeDelete('<?= base_url('questionnaire/questionnaire/delete?_id='._encrypt($value->_id, 'penyihir-cinta', true)) ?>')"><i class="fa fa-trash"></i></a>
+                                                        <a href="<?= base_url('questionnaire/question/create?_id='.urlencode(_encrypt($value->_id, 'penyihir-cinta', true))) ?>" class="btn btn-sm btn-info <?=$is_delete?>" data-toggle="tooltip" data-placement="top" title="Ubah data"><i class="ni ni-settings-gear-65"></i></a>
+                                                        <a href="#" class="btn btn-sm btn-danger <?=$is_delete?>" data-toggle="tooltip" data-placement="top" title="Hapus data" onclick="beforeDelete('<?= base_url('questionnaire/question/delete?_id='.urlencode(_encrypt($value->_id, 'penyihir-cinta', true))) ?>')"><i class="fa fa-trash"></i></a>
                                                     </td>
                                                 </tr>
                                             <?php
