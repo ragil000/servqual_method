@@ -59,7 +59,7 @@
                                 <div class="form-group mb-3">
                                     <div class="input-group input-group-alternative">
                                         <?php
-                                        $get_data = $this->db->get_where('labs', ['status' => 'active']);
+                                        $get_data = $this->db->get_where('labs', ['deleted_at' => NULL]);
                                         $link_jump = '<a href="'.base_url('Auth?is_super=yes').'" class="text-sm">super admin?</a>';
                                         if (@$_GET['is_super'] != 'yes') {
                                         ?>
