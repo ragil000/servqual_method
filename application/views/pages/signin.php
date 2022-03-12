@@ -59,13 +59,21 @@
                                 <div class="form-group mb-3">
                                     <div class="input-group input-group-alternative">
                                         <?php
+                                        $get_data = $this->db->get_where('labs', ['status' => 'active']);
                                         $link_jump = '<a href="'.base_url('Auth?is_super=yes').'" class="text-sm">super admin?</a>';
                                         if (@$_GET['is_super'] != 'yes') {
                                         ?>
                                             <select class="form-control" name="lab_id" required>
                                                 <option value="">--Pilih Laboratorium--</option>
-                                                <option value="1">Laboratorium AI</option>
-                                                <option value="2">Laboratorium Jaringan</option>
+                                                <?php
+                                                    if($get_data->num_rows() > 0) {
+                                                        foreach($get_data->result() as $value) {
+                                                ?>
+                                                <option value="<?=$value->_id?>"><?=$value->title?></option>
+                                                <?php
+                                                        }
+                                                    }
+                                                ?>
                                             </select>
                                         <?php
                                         }else {
