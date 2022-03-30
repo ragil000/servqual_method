@@ -51,6 +51,8 @@ async function detailModal(e) {
 
     let data = null
     if(getData['status']) data = getData['data']
+    
+    let question = $(e).data('value')
 
     $('#modalDetailLabel').html('Detail')
     let table = '<table class="modal-table" style="table-layout: fixed; width: 100%;">'+
@@ -59,7 +61,7 @@ async function detailModal(e) {
                             '<td><b>Kriteria/Pertanyaan:</b></td>'+
                         '</tr>'+
                         '<tr>'+
-                            '<td style="word-wrap: break-word;">I am using Sweet Alert for a popup on my product view in an E-commerce Application with two buttons: one for going on cart View and another for reloading the view.</td>'+
+                            '<td style="word-wrap: break-word;">'+question+'</td>'+
                         '</tr>'+
                         '<tr style="height: 10px">'+
                             '<td></td>'+
