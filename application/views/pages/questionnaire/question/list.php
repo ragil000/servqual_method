@@ -10,6 +10,11 @@
                                         <div class="form-group">
                                             <select class="form-control select2" name="questionnaire_id" onchange="changeData('<?=base_url('questionnaire/question')?>', {'questionnaire_id': {'type': 'select', 'id': 'questionnaire_id'}})" id="questionnaire_id">
                                                 <?php
+                                                $is_data_ready = '';
+                                                if(empty($questionnaire_id)) {
+                                                    $is_data_ready = 'disabled';
+                                                }
+
                                                 $is_delete = '';
                                                 if($current_questionnaire->status) {
                                                     if($current_questionnaire->data->is_publish == 'yes') $is_delete = 'disabled';
@@ -26,7 +31,7 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-5 text-left">
-                                        <a href="<?= base_url('questionnaire/question/create') ?>" class="btn btn-primary btn-icon <?=$is_delete?>"><span class="btn-inner--icon"><i class="ni ni-single-copy-04"></i></span> Tambah</a>
+                                        <a href="<?= base_url('questionnaire/question/create') ?>" class="btn btn-primary btn-icon <?=$is_delete?> <?=$is_data_ready?>"><span class="btn-inner--icon"><i class="ni ni-single-copy-04"></i></span> Tambah</a>
                                     </div>
                                 </div>
                             </div>

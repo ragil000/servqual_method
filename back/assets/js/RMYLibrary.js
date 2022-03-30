@@ -79,4 +79,12 @@ function _splitText(string, limit = 100) {
 const decimalFormatter = new Intl.NumberFormat('en-US', {
     minimumFractionDigits: 0,      
     maximumFractionDigits: 2,
- })
+})
+
+function copyText(text) {
+     /* Copy the text inside the text field */
+    navigator.clipboard.writeText(text)
+  
+    /* Alert the copied text */
+    alert("Copied the text: " + text)
+  }

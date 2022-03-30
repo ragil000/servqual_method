@@ -20,6 +20,7 @@ class Questionnaire_model extends CI_Model{
                         $this->db->where('lab_id', $lab_id);
                         $this->db->where('status', 'active');
                         $this->db->where('is_publish', 'yes');
+                        $this->db->where('deleted_at', NULL);
             $get_data = $this->db->get('questionnaires');
         }else {
                         $this->db->where('lab_id', $lab_id);
@@ -29,6 +30,7 @@ class Questionnaire_model extends CI_Model{
                             $this->db->order_by('questionnaires.status', 'ASC');
                             $this->db->order_by('questionnaires._id', 'DESC');
                         }
+                        $this->db->where('deleted_at', NULL);
             $get_data = $this->db->get('questionnaires');
         }
 

@@ -29,7 +29,7 @@ class Ranking extends CI_Controller {
         $data['current_questionnaire'] = $this->Questionnaire_model->get_default_questionnaire();
         
 		$page = floor(($page/10) + 1);
-        $get_data				= $this->Question_model->get_data($page, $search, $data['current_questionnaire']->data->_id, 10, true);
+        $get_data				= $this->Question_model->get_data($page, $search, @$data['current_questionnaire']->data->_id, 10, true);
 
         //konfigurasi pagination
         $config['base_url'] = site_url('analysis/ranking'); //site url

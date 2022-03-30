@@ -9,18 +9,23 @@ class Dashboard_model extends CI_Model{
                                         $this->db->where('lab_id', $lab_id);
                                     }
                                     $this->db->where('status', 'active');
+                                    $this->db->where('deleted_at', NULL);
         $get_data_questionnaire =   $this->db->count_all_results('questionnaires');
 
                                             if($lab_id) {
                                                 $this->db->where('lab_id', $lab_id);
                                             }
+                                            $this->db->where('deleted_at', NULL);
         $get_data_questionnaire_active =    $this->db->count_all_results('questionnaires');
 
+                                $this->db->join('questionnaires', 'questionnaires._id=answers.questionnaire_id');
                                 if($lab_id) {
-                                    $this->db->where('lab_id', $lab_id);
+                                    $this->db->where('answers.lab_id', $lab_id);
                                 }
-                                $this->db->group_by('nim');
-        $get_data_answerer =     $this->db->count_all_results('answers');
+                                $this->db->where('questionnaires.deleted_at', NULL);
+                                $this->db->select('answers._id');
+                                $this->db->group_by('answers.nim');
+        $get_data_answerer =    $this->db->count_all_results('answers');
 
         $get_data_lab =    $this->db->count_all_results('labs');
 
@@ -35,7 +40,7 @@ class Dashboard_model extends CI_Model{
             ],
             'response_code' => 200
         ];
-        
+
         return $results;
     }
 
