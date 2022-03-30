@@ -82,9 +82,22 @@ const decimalFormatter = new Intl.NumberFormat('en-US', {
 })
 
 function copyText(text) {
-     /* Copy the text inside the text field */
-    navigator.clipboard.writeText(text)
-  
-    /* Alert the copied text */
-    alert("Copied the text: " + text)
+    navigator.clipboard.writeText(text).then(function () {
+        // alert('It worked! Do a CTRL - V to paste')
+        Swal.fire({
+            html: '<span class="text-info">Berhasil disalin!</span>',
+            timer: 2000,
+            showConfirmButton: false,
+            toast: true,
+            position: 'top-right'
+          })
+    }, function () {
+        Swal.fire({
+            html: '<span class="text-danger">Gagal disalin!</span>',
+            timer: 2000,
+            showConfirmButton: false,
+            toast: true,
+            position: 'top-right'
+          })
+    });
   }

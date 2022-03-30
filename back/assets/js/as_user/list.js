@@ -40,7 +40,14 @@ function resetUser() {
 }
 
 if(!SESSION_USER) {
-    if(!params['lab_id'] || !IS_DATA_READY) {
+    if(!IS_DATA_READY) {
+        Swal.fire({
+            title: 'Maaf, tidak ada pertanyaan untuk dijawab',
+            html: 'Silahkan hubungi admin untuk mengonfirmasi kuesionernya!',
+            allowOutsideClick: false,
+            showConfirmButton: false
+        })
+    }else if(!params['lab_id']) {
         Swal.fire({
             title: 'Maaf, url tidak valid :(',
             html: 'Silahkan hubungi admin untuk mendapatkan url yang valid!',
