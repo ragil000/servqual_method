@@ -3,8 +3,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Questionnaire_model extends CI_Model{
 
-    public function get_default_questionnaire($is_active_publish=false) {
+    public function get_default_questionnaire($is_active_publish=false, $lab_id=NULL) {
         $current_questionnaire_id = $this->session->userdata('current_questionnaire_id');
+        if(!$lab_id) {
+            $lab_id = $this->session->userdata('lab_id');
+        }
 
         $results = (object) [
             'status' => false,
@@ -14,12 +17,12 @@ class Questionnaire_model extends CI_Model{
 
         $get_data = NULL;
         if($is_active_publish) {
-                        $this->db->where('lab_id', $this->session->userdata('lab_id'));
+                        $this->db->where('lab_id', $lab_id);
                         $this->db->where('status', 'active');
                         $this->db->where('is_publish', 'yes');
             $get_data = $this->db->get('questionnaires');
         }else {
-                        $this->db->where('lab_id', $this->session->userdata('lab_id'));
+                        $this->db->where('lab_id', $lab_id);
                         if($current_questionnaire_id) {
                             $this->db->where('_id', $current_questionnaire_id);
                         }else {

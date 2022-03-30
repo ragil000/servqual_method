@@ -56,7 +56,7 @@ class Answer_model extends CI_Model{
                 // echo "</pre>";
                 // die;
                 $check_expectation = $this->db->get_where('summary_servqual', ['question_id' => $value->question_id, 'type' => 'expectation', 'gap' => $value->expectation_answer]);
-                $check_reality = $this->db->get_where('summary_servqual', ['question_id' => $value->question_id, 'type' => 'reality', 'gap' => $value->expectation_answer]);
+                $check_reality = $this->db->get_where('summary_servqual', ['question_id' => $value->question_id, 'type' => 'reality', 'gap' => $value->reality_answer]);
 
                 if($check_expectation->num_rows() > 0) {
                     $fetch_data = $check_expectation->row();

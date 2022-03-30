@@ -1,3 +1,7 @@
+const params = new Proxy(new URLSearchParams(window.location.search), {
+    get: (searchParams, prop) => searchParams.get(prop),
+})
+
 function validateForm() {
     let totalElementCheck = $('#total_data').val()
     $('.alert-rmy-validation').remove()
@@ -36,50 +40,59 @@ function resetUser() {
 }
 
 if(!SESSION_USER) {
-    Swal.fire({
-        title: 'Inputkan nama dan NIM anda!',
-        html:
-          '<input id="name" class="swal2-input" placeholder="nama">' +
-          '<input id="nim" class="swal2-input" placeholder="NIM">',
-        focusConfirm: false,
-        confirmButtonText: 'Mulai Menjawab!',
-        allowOutsideClick: false,
-        preConfirm: () => {
-            if(!document.getElementById('name').value || !document.getElementById('nim').value) {
-                Swal.showValidationMessage('Harus semua diisi!')
-            }
-            return {
-                name: document.getElementById('name').value,
-                nim: document.getElementById('nim').value,
-                questionnaire_id: document.getElementsByName('questionnaire_id')[0].value
-            }
-        }
-      }).then(async (e) => {
+    if(!params['lab_id'] || !IS_DATA_READY) {
         Swal.fire({
-            title: 'Sedang menghitung!',
-            html: 'Jangan keluar dari halaman ini.',
+            title: 'Maaf, url tidak valid :(',
+            html: 'Silahkan hubungi admin untuk mendapatkan url yang valid!',
             allowOutsideClick: false,
-            didOpen: () => {
-              Swal.showLoading()
-            }
+            showConfirmButton: false
         })
-
-        let getResponse = await setUser(e.value.name, e.value.nim, e.value.questionnaire_id)
-        // Swal.close()
-        if(JSON.parse(getResponse)) {
-            location.reload()
-        }else {
+    }else {
+        Swal.fire({
+            title: 'Inputkan nama dan NIM anda!',
+            html:
+            '<input id="name" class="swal2-input" placeholder="nama">' +
+            '<input id="nim" class="swal2-input" placeholder="NIM">',
+            focusConfirm: false,
+            confirmButtonText: 'Mulai Menjawab!',
+            allowOutsideClick: false,
+            preConfirm: () => {
+                if(!document.getElementById('name').value || !document.getElementById('nim').value) {
+                    Swal.showValidationMessage('Harus semua diisi!')
+                }
+                return {
+                    name: document.getElementById('name').value,
+                    nim: document.getElementById('nim').value,
+                    questionnaire_id: document.getElementsByName('questionnaire_id')[0].value
+                }
+            }
+        }).then(async (e) => {
             Swal.fire({
-                title: 'NIM anda sudah mengisi kuesioner ini!',
-                html: 'Anda tidak perlu mengisi kuesioner ini kembali.',
-                timer: 2500,
+                title: 'Sedang menghitung!',
+                html: 'Jangan keluar dari halaman ini.',
                 allowOutsideClick: false,
                 didOpen: () => {
-                  Swal.showLoading()
+                Swal.showLoading()
                 }
-            }).then(() => {
-                location.reload()
             })
-        }
-      })
+    
+            let getResponse = await setUser(e.value.name, e.value.nim, e.value.questionnaire_id)
+            // Swal.close()
+            if(JSON.parse(getResponse)) {
+                location.reload()
+            }else {
+                Swal.fire({
+                    title: 'NIM anda sudah mengisi kuesioner ini!',
+                    html: 'Anda tidak perlu mengisi kuesioner ini kembali.',
+                    timer: 2500,
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                    Swal.showLoading()
+                    }
+                }).then(() => {
+                    location.reload()
+                })
+            }
+        })
+    }
 }

@@ -5,9 +5,9 @@ class AsUser extends CI_Controller {
 
 	public function __construct() {
 		parent::__construct();
-		if(!$this->session->userdata('auth_signin')) {
-			redirect('Auth');
-		}
+		// if(!$this->session->userdata('auth_signin')) {
+		// 	redirect('Auth');
+		// }
 		$this->load->model('Questionnaire_model');
 		$this->load->model('Question_model');
 		$this->load->model('Answer_model');
@@ -16,7 +16,16 @@ class AsUser extends CI_Controller {
 
     public function index() {
         $this->session->set_userdata(['old_url' => str_replace('/servqual_method/', '',$_SERVER['REQUEST_URI']), 'old_query' => $_SERVER['QUERY_STRING']]);
-        $get_questionnaire      = $this->Questionnaire_model->get_default_questionnaire(true);
+        $lab_id = $this->input->get('lab_id');
+        if($lab_id) {
+            try {
+                $lab_id = _decrypt($lab_id, 'penyihir-cinta', true);
+            }catch(Exception $e) {
+                $lab_id = null;
+            }
+        }
+
+        $get_questionnaire      = $this->Questionnaire_model->get_default_questionnaire(true, $lab_id);
         $questionnaire_id       = $get_questionnaire->status ? $get_questionnaire->data->_id : NULL;
         
         $data['data']           = $this->Question_model->get_data(1, NULL, $questionnaire_id, 100);;

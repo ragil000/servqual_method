@@ -194,5 +194,6 @@
                                         </div>
 
                                         <script>
+                                            const IS_DATA_READY = <?=json_encode($data->status)?>;
                                             const SESSION_USER = <?=($this->session->userdata('session_user') ? json_encode($this->session->userdata('session_user')) : json_encode(null))?>;
                                         </script>

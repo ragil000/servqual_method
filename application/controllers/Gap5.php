@@ -36,7 +36,6 @@ class Gap5 extends CI_Controller {
         
         $search = $this->input->post('search') || $this->session->userdata('search_question');
         if($search) {
-
             $this->session->set_userdata(['search_question' => $search]);
         }
 
