@@ -4,9 +4,25 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Website resmi Litbang kabupaten Bombana, Sulawesi Tenggara">
-    <meta name="author" content="Creative Tim">
+    <meta name="author" content="Kurniah Patrudin">
+    <meta content="servqual, servqual method, service quality, service quality method, metode penilaian, metode penilaian qualitas, penilian kualitas layanan, layanan, kualitas layanan, penilaian, metode layanan" name="keywords">
+    
     <title>Servqual Method | <?=isset($title) ? $title : 'Admin'?></title>
+
+    <!-- SEO -->
+    <meta name="description" content="Kuesioner penilaian kualitas layanan laboratorium, untuk melihat tingkat kualitas layanan yang diterima pengguna...">
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <link rel="canonical" href="<?=$this->session->userdata('old_url')?>" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Kuesioner Penilaian Kulitas Layanan" />
+    <meta property="og:description" content="Kuesioner penilaian kualitas layanan laboratorium, untuk melihat tingkat kualitas layanan yang diterima pengguna..." />
+    <meta property="og:url" content="<?=$this->session->userdata('old_url')?>" />
+    <meta property="og:site_name" content="Kuesioner Penilaian Kulitas Layanan" />
+    <meta property="article:published_time" content="<?=date('Y-m-d H:m:s')?>" />
+
     <!-- Favicon -->
     <link href="<?= base_url() ?>back/assets/img/brand/logo.ico" rel="icon" type="image/png">
     <!-- Fonts -->
@@ -16,6 +32,10 @@
     <link href="<?= base_url() ?>back/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
     <!-- Argon CSS -->
     <link type="text/css" href="<?= base_url() ?>back/assets/css/argon.css?v=1.0.0" rel="stylesheet">
+
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" href="https://ummusshabri.sch.id/template/awal/assets/img/logo-pesri.png"> 
 
     <!-- by vendor -->
     <?php
