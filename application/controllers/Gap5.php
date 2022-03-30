@@ -51,7 +51,7 @@ class Gap5 extends CI_Controller {
         $get_data				= $this->Question_model->get_data($page, $search, $data['current_questionnaire']->data->_id);
 
         //konfigurasi pagination
-        $config['base_url'] = site_url('questionnaire/question'); //site url
+        $config['base_url'] = site_url('analysis/gap5/list'); //site url
         $config['total_rows'] = $get_data->total_data; //total row
         $config['per_page'] = $get_data->limit;  //show record per halaman
         $config["num_links"] = $get_data->total_page;
