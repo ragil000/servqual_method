@@ -64,7 +64,7 @@ class Question extends CI_Controller {
  
         $data['data'] = $get_data->data;
 
-        $data['questionnaire_id'] = $questionnaire_id;         
+        $data['questionnaire_id'] = $questionnaire_id || @$data['current_questionnaire']->data->_id;         
  
         $data['pagination'] = $this->pagination->create_links();
 

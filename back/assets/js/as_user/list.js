@@ -43,7 +43,7 @@ if(!SESSION_USER) {
     if(!IS_DATA_READY) {
         Swal.fire({
             title: 'Maaf, tidak ada pertanyaan untuk dijawab',
-            html: 'Silahkan hubungi admin untuk mengonfirmasi kuesionernya!',
+            html: 'Silahkan hubungi admin untuk mengonfirmasi kuesioner ini!',
             allowOutsideClick: false,
             showConfirmButton: false
         })
