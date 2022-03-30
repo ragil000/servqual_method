@@ -20,6 +20,7 @@ class Questionnaire_model extends CI_Model{
                         $this->db->where('lab_id', $lab_id);
                         $this->db->where('status', 'active');
                         $this->db->where('is_publish', 'yes');
+                        $this->db->where('end_periode <=', date('Y-m-d'));
                         $this->db->where('deleted_at', NULL);
             $get_data = $this->db->get('questionnaires');
         }else {
