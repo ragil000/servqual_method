@@ -4,15 +4,36 @@ const params = new Proxy(new URLSearchParams(window.location.search), {
 
 function validateForm() {
     let totalElementCheck = $('#total_data').val()
+    let labCount = $('#lab_count').val()
+    let labs = []
+    if(labCount) {
+        for(let i=1; i <= labCount; i++) {
+            let lab = $('#lab_'+i).val()
+            labs.push(lab)
+        }
+    }
     $('.alert-rmy-validation').remove()
     
     let status = true
     for(let i=1; i <= totalElementCheck; i++) {
-        let valueOfElementExpectation = $(`input[name=expectation_answer_${i}]:checked`).val()
-        let valueOfElementReality = $(`input[name=reality_answer_${i}]:checked`).val()
-        if(!valueOfElementExpectation || !valueOfElementReality) {
-            $('<small class="alert-rmy-validation text-danger pt-0 mt-0">Belum semua dicentang.</small>').insertAfter($(`#question_${i}`))
-            status = false
+        if(labCount) {
+            if(labs.length) {
+                labs.forEach(element => {
+                    let valueOfElementExpectation = $(`input[name=expectation_answer_${i}-${element}]:checked`).val()
+                    let valueOfElementReality = $(`input[name=reality_answer_${i}-${element}]:checked`).val()
+                    if(!valueOfElementExpectation || !valueOfElementReality) {
+                        $('<small class="alert-rmy-validation text-danger pt-0 mt-0">Belum semua dicentang.</small>').insertAfter($(`#question_${i}`))
+                        status = false
+                    }
+                })
+            }
+        }else {
+            let valueOfElementExpectation = $(`input[name=expectation_answer_${i}]:checked`).val()
+            let valueOfElementReality = $(`input[name=reality_answer_${i}]:checked`).val()
+            if(!valueOfElementExpectation || !valueOfElementReality) {
+                $('<small class="alert-rmy-validation text-danger pt-0 mt-0">Belum semua dicentang.</small>').insertAfter($(`#question_${i}`))
+                status = false
+            }
         }
     }
 
@@ -47,7 +68,7 @@ if(!SESSION_USER) {
             allowOutsideClick: false,
             showConfirmButton: false
         })
-    }else if(!params['lab_id']) {
+    }else if(!params['questionnaire_id']) {
         Swal.fire({
             title: 'Maaf, url tidak valid :(',
             html: 'Silahkan hubungi admin untuk mendapatkan url yang valid!',

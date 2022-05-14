@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Questionnaire_model extends CI_Model{
 
-    public function get_default_questionnaire($is_active_publish=false, $lab_id=NULL) {
+    public function get_default_questionnaire($is_active_publish=false, $lab_id=NULL, $questionnaire_id=NULL) {
         $current_questionnaire_id = $this->session->userdata('current_questionnaire_id');
         if($this->session->userdata('role') == 'admin') {
             if(!$lab_id) {
@@ -29,41 +29,46 @@ class Questionnaire_model extends CI_Model{
         ];
 
         $get_data = NULL;
-        if($is_active_publish) {
-                        if($this->session->userdata('role') == 'admin') {
-                            if(count($group_ids)) {
-                                $this->db->group_start();
-                                    $this->db->where_in('group_id', $group_ids);
-                                    $this->db->or_where('lab_id', $lab_id);
-                                $this->db->group_end();
-                            }else {
-                                $this->db->where('questionnaires.lab_id', $this->session->userdata('lab_id'));
-                            }
-                        }
-                        $this->db->where('status', 'active');
-                        $this->db->where('is_publish', 'yes');
-                        $this->db->where('end_periode >=', date('Y-m-d'));
-                        $this->db->where('deleted_at', NULL);
+        if($questionnaire_id) {
+                        $this->db->where('_id', $questionnaire_id);
             $get_data = $this->db->get('questionnaires');
         }else {
-                        if($this->session->userdata('role') == 'admin') {
-                            if(count($group_ids)) {
-                                $this->db->group_start();
-                                    $this->db->where_in('group_id', $group_ids);
-                                    $this->db->or_where('lab_id', $lab_id);
-                                $this->db->group_end();
-                            }else {
-                                $this->db->where('questionnaires.lab_id', $this->session->userdata('lab_id'));
+            if($is_active_publish) {
+                            if($this->session->userdata('role') == 'admin') {
+                                if(count($group_ids)) {
+                                    $this->db->group_start();
+                                        $this->db->where_in('group_id', $group_ids);
+                                        $this->db->or_where('lab_id', $lab_id);
+                                    $this->db->group_end();
+                                }else {
+                                    $this->db->where('questionnaires.lab_id', $this->session->userdata('lab_id'));
+                                }
                             }
-                        }
-                        if($current_questionnaire_id) {
-                            $this->db->where('_id', $current_questionnaire_id);
-                        }else {
-                            $this->db->order_by('questionnaires.status', 'ASC');
-                            $this->db->order_by('questionnaires._id', 'DESC');
-                        }
-                        $this->db->where('deleted_at', NULL);
-            $get_data = $this->db->get('questionnaires');
+                            $this->db->where('status', 'active');
+                            $this->db->where('is_publish', 'yes');
+                            $this->db->where('end_periode >=', date('Y-m-d'));
+                            $this->db->where('deleted_at', NULL);
+                $get_data = $this->db->get('questionnaires');
+            }else {
+                            if($this->session->userdata('role') == 'admin') {
+                                if(count($group_ids)) {
+                                    $this->db->group_start();
+                                        $this->db->where_in('group_id', $group_ids);
+                                        $this->db->or_where('lab_id', $lab_id);
+                                    $this->db->group_end();
+                                }else {
+                                    $this->db->where('questionnaires.lab_id', $this->session->userdata('lab_id'));
+                                }
+                            }
+                            if($current_questionnaire_id) {
+                                $this->db->where('_id', $current_questionnaire_id);
+                            }else {
+                                $this->db->order_by('questionnaires.status', 'ASC');
+                                $this->db->order_by('questionnaires._id', 'DESC');
+                            }
+                            $this->db->where('deleted_at', NULL);
+                $get_data = $this->db->get('questionnaires');
+            }
         }
 
         if($get_data->num_rows() > 0) {

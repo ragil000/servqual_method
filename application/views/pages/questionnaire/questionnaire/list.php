@@ -53,12 +53,11 @@
                                             foreach ($data as $value) {
                                                 $date1 = new DateTime($date_now);
                                                 $date2 = new DateTime($value->end_periode);
-                                                $interval = $date1->diff($date2);
 
                                                 $end_date = '';
-                                                if($interval->d > 0) $end_date = 'class="text-danger" data-toggle="tooltip" data-placement="right" title="Kuesioner sudah kadaluarsa (user tidak akan bisa mengisi kuesioner ini lagi)"';
+                                                if($date1 > $date2) $end_date = 'class="text-danger" data-toggle="tooltip" data-placement="right" title="Kuesioner sudah kadaluarsa (user tidak akan bisa mengisi kuesioner ini lagi)"';
                                                 $is_disabled = '';
-                                                if($value->created_by_role == 'super') $is_disabled = 'disabled';
+                                                if(($value->created_by_role == 'admin' && $this->session->userdata('role') == 'super') || ($value->created_by_role == 'super' && $this->session->userdata('role') == 'admin')) $is_disabled = 'disabled';
 
                                                 $is_delete = '';
                                                 $is_publish = '';
@@ -79,12 +78,10 @@
                                                     <td><span <?= $end_date ?>><?= _dateShortID($value->start_periode, false) . ' / ' . _dateShortID($value->end_periode, false) ?></span></td>
                                                     <?php
                                                         if($this->session->userdata('role') == 'super') {
-
                                                     ?>
                                                     <td><?= $value->group_id ? '<span class="text-warning"><a href="#" onclick="detailModal(this)" data-id="'.$value->group_id.'" data-toggle="tooltip" data-placement="top" title="Klik untuk melihat detail">bersama lab lain</a></span>' : $value->lab_title ?></td>
                                                     <?php
                                                         }else {
-
                                                     ?>
                                                     <td><?= $value->group_id ? '<span class="text-warning"><a href="#" onclick="detailModal(this)" data-id="'.$value->group_id.'" data-toggle="tooltip" data-placement="top" title="Klik untuk melihat detail">bersama lab lain</a></span>' : '<span class="text-info">hanya lab ini</span>' ?></td>
                                                     <?php
@@ -93,8 +90,8 @@
                                                     <td><?= $is_active[$value->status] ?></td>
                                                     <td class="text-right">
                                                         <a href="#" class="btn btn-sm btn-info <?=$is_disabled?> <?=$is_publish?>" <?=$hidden_pubish_button?> data-toggle="tooltip" data-placement="top" title="Publish data" onclick="beforePublish('<?= base_url('questionnaire/questionnaire/publish?_id='.urlencode(_encrypt($value->_id, 'penyihir-cinta', true))) ?>')"><i class="ni ni-notification-70"></i></a>
-                                                        <a href="<?= base_url('as_user?lab_id='.urlencode(_encrypt($this->session->userdata('lab_id'), 'penyihir-cinta', true))) ?>" target="_blank" class="btn btn-sm btn-info" <?=$see_as_user?> data-toggle="tooltip" data-placement="top" title="Lihat sebagai user"><i class="ni ni-send"></i></a>
-                                                        <a href="#" onclick="copyText('<?= base_url('as_user?lab_id='.urlencode(_encrypt($this->session->userdata('lab_id'), 'penyihir-cinta', true))) ?>')" class="btn btn-sm btn-success" <?=$see_as_user?> data-toggle="tooltip" data-placement="top" title="Salin url"><i class="ni ni-ungroup"></i></a>
+                                                        <a href="<?= base_url('as_user?questionnaire_id='.urlencode(_encrypt($value->_id, 'penyihir-cinta', true))) ?>" target="_blank" class="btn btn-sm btn-info" <?=$see_as_user?> data-toggle="tooltip" data-placement="top" title="Lihat sebagai user"><i class="ni ni-send"></i></a>
+                                                        <a href="#" onclick="copyText('<?= base_url('as_user?questionnaire_id='.urlencode(_encrypt($value->_id, 'penyihir-cinta', true))) ?>')" class="btn btn-sm btn-success" <?=$see_as_user?> data-toggle="tooltip" data-placement="top" title="Salin url"><i class="ni ni-ungroup"></i></a>
                                                         <a href="#" class="btn btn-sm btn-primary <?=($value->group_id ? $is_disabled : '')?>" <?=$is_activate?> data-toggle="tooltip" data-placement="top" title="Aktifkan data" onclick="beforeActivate('<?= base_url('questionnaire/questionnaire/activate?_id='.urlencode(_encrypt($value->_id, 'penyihir-cinta', true))) ?>')"><i class="ni ni-button-play"></i></a>
                                                         <a href="#" class="btn btn-sm btn-primary <?=($value->group_id ? $is_disabled : '')?>" <?=$is_nonactivate?> data-toggle="tooltip" data-placement="top" title="Non-aktifkan data" onclick="beforeNonactivate('<?= base_url('questionnaire/questionnaire/nonactivate?_id='.urlencode(_encrypt($value->_id, 'penyihir-cinta', true))) ?>')"><i class="ni ni-button-pause"></i></a>
                                                         <a href="#" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Lihat list pertanyaan" onclick="detail('<?= base_url('questionnaire/question?questionnaire_id='.urlencode(_encrypt($value->_id, 'penyihir-cinta', true))) ?>')"><i class="fa fa-eye"></i></a>

@@ -8,12 +8,15 @@ class Question_model extends CI_Model{
         $page = $page <= 0 ? 1 : $page;
         $start = ($page-1)*$limit;
 
+                        $this->db->join('questions', 'questions._id=temp_gap5.question_id', 'left');
                         $this->db->join('users', 'users._id=questions.created_by', 'left');
-                        $this->db->join('labs', 'labs._id=questions.lab_id', 'left');
                         $this->db->join('dimensions', 'dimensions._id=questions.dimension_id', 'left');
-                        $this->db->join('temp_gap5', 'temp_gap5.lab_id=questions.lab_id AND temp_gap5.questionnaire_id=questions.questionnaire_id AND temp_gap5.question_id=questions._id', 'left');
+                        $this->db->join('labs', 'labs._id=temp_gap5.lab_id', 'left');
                         $this->db->join('questionnaires', 'questionnaires._id=questions.questionnaire_id', 'left');
                         $this->db->where('questions.questionnaire_id', $questionnaire_id);
+                        if($this->session->userdata('role') == 'admin') {
+                            $this->db->where('temp_gap5.lab_id', $this->session->userdata('lab_id'));
+                        }
                         if($search) {
                             $this->db->like('questions.question', $search);
                             $this->db->or_like('dimensions.title', $search);
@@ -26,15 +29,23 @@ class Question_model extends CI_Model{
                         }else {
                             $this->db->order_by('questions.dimension_id', 'ASC');
                         }
-        $get_data =    $this->db->get('questions');
+        $get_data =    $this->db->get('temp_gap5');
 
+                    $this->db->join('questions', 'questions._id=temp_gap5.question_id', 'left');
+                    $this->db->join('users', 'users._id=questions.created_by', 'left');
+                    $this->db->join('dimensions', 'dimensions._id=questions.dimension_id', 'left');
+                    $this->db->join('labs', 'labs._id=temp_gap5.lab_id', 'left');
+                    $this->db->join('questionnaires', 'questionnaires._id=questions.questionnaire_id', 'left');
+                    if($this->session->userdata('role') == 'admin') {
+                        $this->db->where('temp_gap5.lab_id', $this->session->userdata('lab_id'));
+                    }
                     if($search) {
                         $this->db->like('questions.question', $search);
                         $this->db->or_like('dimensions.title', $search);
                     }
                     $this->db->where('questions.questionnaire_id', $questionnaire_id);
                     $this->db->where('questions.deleted_at', NULL);
-        $count =    $this->db->count_all_results('questions');
+        $count =    $this->db->count_all_results('temp_gap5');
         
         if($count > 0) {
             $results = (object) [
@@ -127,7 +138,7 @@ class Question_model extends CI_Model{
         if($get_data_questionnaire) {
             $lab_id = NULL;
             $group_id = NULL;
-            if($get_data_questionnaire->goup_id) $group_id = $get_data_questionnaire->goup_id;
+            if($get_data_questionnaire->group_id) $group_id = $get_data_questionnaire->goup_id;
             else $lab_id = $get_data_questionnaire->lab_id;
 
             $post['lab_id'] = $lab_id;

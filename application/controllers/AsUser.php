@@ -11,24 +11,40 @@ class AsUser extends CI_Controller {
 		$this->load->model('Questionnaire_model');
 		$this->load->model('Question_model');
 		$this->load->model('Answer_model');
-		// $this->load->model('SummaryServqual_model');
+		$this->load->model('Group_model');
 	}
 
     public function index() {
         $this->session->set_userdata(['old_url' => str_replace('/servqual_method/', '',$_SERVER['REQUEST_URI']), 'old_query' => $_SERVER['QUERY_STRING']]);
-        $lab_id = $this->input->get('lab_id');
-        if($lab_id) {
+        $questionnaire_id = $this->input->get('questionnaire_id');
+        if($questionnaire_id) {
             try {
-                $lab_id = _decrypt($lab_id, 'penyihir-cinta', true);
+                $questionnaire_id = _decrypt($questionnaire_id, 'penyihir-cinta', true);
             }catch(Exception $e) {
-                $lab_id = null;
+                $questionnaire_id = null;
             }
         }
 
-        $get_questionnaire      = $this->Questionnaire_model->get_default_questionnaire(true, $lab_id);
-        $questionnaire_id       = $get_questionnaire->status ? $get_questionnaire->data->_id : NULL;
-        
-        $data['data']           = $this->Question_model->get_data(1, NULL, $questionnaire_id, 100);;
+        $get_questionnaire      = $this->Questionnaire_model->get_default_questionnaire(true, NULL, $questionnaire_id);
+        $data['is_group']   = FALSE;
+        if($get_questionnaire->status) {
+            $current_questionnaire = $get_questionnaire->data;
+            if($current_questionnaire->group_id) {
+                $data['is_group'] = TRUE;
+                $get_group   = $this->Group_model->get_data($current_questionnaire->group_id);
+                if($get_group->status) {
+                    $data['labs'] = $get_group->data;
+                }
+            }else {
+                $data['lab_id'] = $current_questionnaire->lab_id;
+            }
+            // echo "<pre>";
+            // print_r($data);
+            // echo "</pre>";
+            // die;
+        }
+        $data['current_questionnaire']  = $get_questionnaire->status ? $get_questionnaire->data : NULL;
+        $data['data']           = $this->Question_model->get_data(1, NULL, $questionnaire_id, 100);
 		$data['head'] 			= 'Kuesioner Penilaian Kualitas Layanan';
 		$data['content']		= 'Kuesioner Penilaian Kualitas Layanan';
 		$data['title']			= 'Kuesioner Penilaian Kualitas Layanan';

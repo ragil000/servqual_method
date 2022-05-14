@@ -1,13 +1,15 @@
                                         <?php
                                             $session_user = $this->session->userdata('session_user');
-                                            $lab_id = null;
+                                            $lab_id = @$lab_id || null;
                                             $questionnaire_id = null;
                                             $lab = '-';
                                             $periode = '-';
                                             $total_data = 0;
                                             if($data->status) {
+                                                // echo "<pre>";
+                                                // print_r($labs);
+                                                // echo "</pre>";
                                                 $periode = _dateShortID($data->data[0]->questionnaire_start_periode, false) . ' / ' . _dateShortID($data->data[0]->questionnaire_end_periode, false);
-                                                $lab_id = $data->data[0]->lab_id;
                                                 $questionnaire_id = $data->data[0]->questionnaire_id;
                                                 $lab = $data->data[0]->lab_title;
                                                 $total_data = $data->total_data_displayed;
@@ -40,6 +42,20 @@
                                                                     <input type="text" name="lab_id" value="<?=$lab_id?>" hidden>
                                                                     <input type="text" name="questionnaire_id" value="<?=$questionnaire_id?>" hidden>
                                                                     <?php
+                                                                        if($is_group) {
+                                                                            if(@$labs) {
+                                                                    ?>
+                                                                    <input type="text" name="lab_count" id="lab_count" value="<?= count($labs) ?>" hidden>
+                                                                    <?php
+                                                                                $no = 1;
+                                                                                foreach($labs as $lab) {
+                                                                    ?>
+                                                                     <input type="text" name="lab_<?=$no?>" id="lab_<?=$no?>" value="<?= $lab->lab_id ?>" hidden>
+                                                                    <?php
+                                                                                    $no++;
+                                                                                }
+                                                                            }
+                                                                        }
                                                                         $no = 1;
                                                                         foreach($data->data as $value) {
                                                                     ?>
@@ -51,6 +67,113 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
+                                                                    <?php
+                                                                        if($is_group) {
+                                                                            if(@$labs) {
+                                                                                foreach($labs as $lab) {
+                                                                    ?>
+                                                                    <div class="col-12 mb-0 border">
+                                                                        <h3><span class="text-info">Bagian: </span><?= $lab->lab_title ?></h3>
+                                                                    </div>
+                                                                    <div class="col-12 mb-4 border">
+                                                                        <div class="row">
+                                                                            <div class="col-6">
+                                                                                <div class="row border">
+                                                                                    <div class="col-12 text-center mb-4">
+                                                                                        <b>Harapan</b>
+                                                                                    </div>
+                                                                                    <div class="col-6">
+                                                                                        <div class="row">
+                                                                                            <div class="col-12 ml-lg-4">
+                                                                                                <label class="form-radio-label">
+                                                                                                    <input class="form-radio-input" type="radio" name="expectation_answer_<?=$no?>-<?=$lab->lab_id?>" value="1">
+                                                                                                    <span class="form-radio-sign">Sangat Tidak Setuju</span>
+                                                                                                </label>
+                                                                                            </div>
+                                                                                            <div class="col-12 ml-lg-4">
+                                                                                                <label class="form-radio-label">
+                                                                                                    <input class="form-radio-input" type="radio" name="expectation_answer_<?=$no?>-<?=$lab->lab_id?>" value="2">
+                                                                                                    <span class="form-radio-sign">Tidak Setuju</span>
+                                                                                                </label>
+                                                                                            </div>
+                                                                                            <div class="col-12 ml-lg-4">
+                                                                                                <label class="form-radio-label">
+                                                                                                    <input class="form-radio-input" type="radio" name="expectation_answer_<?=$no?>-<?=$lab->lab_id?>" value="3">
+                                                                                                    <span class="form-radio-sign">Biasa</span>
+                                                                                                </label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-6">
+                                                                                        <div class="row">
+                                                                                            <div class="col-12 ml-lg-4">
+                                                                                                <label class="form-radio-label">
+                                                                                                    <input class="form-radio-input" type="radio" name="expectation_answer_<?=$no?>-<?=$lab->lab_id?>" value="4">
+                                                                                                    <span class="form-radio-sign">Setuju</span>
+                                                                                                </label>
+                                                                                            </div>
+                                                                                            <div class="col-12 ml-lg-4">
+                                                                                                <label class="form-radio-label">
+                                                                                                    <input class="form-radio-input" type="radio" name="expectation_answer_<?=$no?>-<?=$lab->lab_id?>" value="5">
+                                                                                                    <span class="form-radio-sign">Sangat Setuju</span>
+                                                                                                </label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-6">
+                                                                                <div class="row border">
+                                                                                    <div class="col-12 text-center mb-4">
+                                                                                        <b>Kenyataan</b>
+                                                                                    </div>
+                                                                                    <div class="col-6">
+                                                                                        <div class="row">
+                                                                                            <div class="col-12 ml-lg-4">
+                                                                                                <label class="form-radio-label">
+                                                                                                    <input class="form-radio-input" type="radio" name="reality_answer_<?=$no?>-<?=$lab->lab_id?>" value="1">
+                                                                                                    <span class="form-radio-sign">Sangat Tidak Setuju</span>
+                                                                                                </label>
+                                                                                            </div>
+                                                                                            <div class="col-12 ml-lg-4">
+                                                                                                <label class="form-radio-label">
+                                                                                                    <input class="form-radio-input" type="radio" name="reality_answer_<?=$no?>-<?=$lab->lab_id?>" value="2">
+                                                                                                    <span class="form-radio-sign">Tidak Setuju</span>
+                                                                                                </label>
+                                                                                            </div>
+                                                                                            <div class="col-12 ml-lg-4">
+                                                                                                <label class="form-radio-label">
+                                                                                                    <input class="form-radio-input" type="radio" name="reality_answer_<?=$no?>-<?=$lab->lab_id?>" value="3">
+                                                                                                    <span class="form-radio-sign">Biasa</span>
+                                                                                                </label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-6">
+                                                                                        <div class="row">
+                                                                                            <div class="col-12 ml-lg-4">
+                                                                                                <label class="form-radio-label">
+                                                                                                    <input class="form-radio-input" type="radio" name="reality_answer_<?=$no?>-<?=$lab->lab_id?>" value="4">
+                                                                                                    <span class="form-radio-sign">Setuju</span>
+                                                                                                </label>
+                                                                                            </div>
+                                                                                            <div class="col-12 ml-lg-4">
+                                                                                                <label class="form-radio-label">
+                                                                                                    <input class="form-radio-input" type="radio" name="reality_answer_<?=$no?>-<?=$lab->lab_id?>" value="5">
+                                                                                                    <span class="form-radio-sign">Sangat Setuju</span>
+                                                                                                </label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <?php
+                                                                                }
+                                                                            }
+                                                                        }else {
+                                                                    ?>
                                                                     <div class="col-12 mb-4 border">
                                                                         <div class="row">
                                                                             <div class="col-6">
@@ -146,6 +269,7 @@
                                                                         </div>
                                                                     </div>
                                                                     <?php
+                                                                        }
                                                                             $no++;
                                                                         }
                                                                     ?>
