@@ -11,6 +11,7 @@ class Question_model extends CI_Model{
                         $this->db->join('users', 'users._id=questions.created_by', 'left');
                         $this->db->join('labs', 'labs._id=questions.lab_id', 'left');
                         $this->db->join('dimensions', 'dimensions._id=questions.dimension_id', 'left');
+                        $this->db->join('temp_gap5', 'temp_gap5.lab_id=questions.lab_id AND temp_gap5.questionnaire_id=questions.questionnaire_id AND temp_gap5.question_id=questions._id', 'left');
                         $this->db->join('questionnaires', 'questionnaires._id=questions.questionnaire_id', 'left');
                         $this->db->where('questions.questionnaire_id', $questionnaire_id);
                         if($search) {
@@ -18,10 +19,10 @@ class Question_model extends CI_Model{
                             $this->db->or_like('dimensions.title', $search);
                         }
                         $this->db->where('questions.deleted_at', NULL);
-                        $this->db->select('questions._id, questions.question, questions.sum_expectation_answer, questions.sum_reality_answer, questions.sum_total_answerer, questions.sum_expectation_average, questions.sum_reality_average, questions.sum_gap5, labs._id as lab_id, labs.title as lab_title, dimensions._id as dimension_id, dimensions.title as dimension_title, dimensions.description as dimension_description, questionnaires._id as questionnaire_id, questionnaires.is_publish, questionnaires.start_periode as questionnaire_start_periode, questionnaires.end_periode as questionnaire_end_periode, questionnaires.status as questionnaire_status, users.username as creator');
+                        $this->db->select('questions._id, questions.question, temp_gap5.sum_expectation_answer, temp_gap5.sum_reality_answer, temp_gap5.sum_total_answerer, temp_gap5.sum_expectation_average, temp_gap5.sum_reality_average, temp_gap5.sum_gap5, labs._id as lab_id, labs.title as lab_title, dimensions._id as dimension_id, dimensions.title as dimension_title, dimensions.description as dimension_description, questionnaires._id as questionnaire_id, questionnaires.is_publish, questionnaires.created_by_role, questionnaires.start_periode as questionnaire_start_periode, questionnaires.end_periode as questionnaire_end_periode, questionnaires.status as questionnaire_status, users.username as creator');
                         $this->db->limit($limit, $start);
                         if($is_ranking) {
-                            $this->db->order_by('questions.sum_gap5', 'ASC');
+                            $this->db->order_by('temp_gap5.sum_gap5', 'DESC');
                         }else {
                             $this->db->order_by('questions.dimension_id', 'ASC');
                         }
@@ -87,8 +88,8 @@ class Question_model extends CI_Model{
     }
 
     public function post_data($post) {
-        $allow_post = ['question', 'dimension_id', 'questionnaire_id', 'lab_id', 'created_by'];
-        $optional_post = [];
+        $allow_post = ['question', 'dimension_id', 'questionnaire_id', 'created_by'];
+        $optional_post = ['lab_id'];
         $check_post = true;
         $count_post = 0;
         foreach($post as $key => $value) {
@@ -100,11 +101,9 @@ class Question_model extends CI_Model{
                         'response_code' => 400
                     ];
                     return $results;
-                }else {
-                    $count_post--;
                 }
             }else {
-                if(empty($value)){
+                if(!$value){
                     $check_post = false;
                 }
                 $count_post++;
@@ -124,14 +123,31 @@ class Question_model extends CI_Model{
             return $results;
         }
 
-        $insert = $this->db->insert('questions', $post);
-        $update_is_delete = $this->db->update('questionnaires', ['is_delete' => 'no'], ['_id' => $post['questionnaire_id']]);
-        if($insert) {
-            $results = (object) [
-                'status' => true,
-                'message' => 'data berhasil ditambahkan.',
-                'response_code' => 200
-            ];
+        $get_data_questionnaire = $this->db->get_where('questionnaires', ['_id' => $post['questionnaire_id']])->row();
+        if($get_data_questionnaire) {
+            $lab_id = NULL;
+            $group_id = NULL;
+            if($get_data_questionnaire->goup_id) $group_id = $get_data_questionnaire->goup_id;
+            else $lab_id = $get_data_questionnaire->lab_id;
+
+            $post['lab_id'] = $lab_id;
+            $post['group_id'] = $group_id;
+
+            $insert = $this->db->insert('questions', $post);
+            $update_is_delete = $this->db->update('questionnaires', ['is_delete' => 'no'], ['_id' => $post['questionnaire_id']]);
+            if($insert) {
+                $results = (object) [
+                    'status' => true,
+                    'message' => 'data berhasil ditambahkan.',
+                    'response_code' => 200
+                ];
+            }else {
+                $results = (object) [
+                    'status' => false,
+                    'message' => 'kesalahan saat memproses request.',
+                    'response_code' => 500
+                ];
+            }
         }else {
             $results = (object) [
                 'status' => false,
@@ -144,8 +160,8 @@ class Question_model extends CI_Model{
     }
 
     public function put_data($put) {
-        $allow_put = ['_id', 'question', 'dimension_id', 'questionnaire_id', 'lab_id', 'updated_by'];
-        $optional_put = [];
+        $allow_put = ['_id', 'question', 'dimension_id', 'questionnaire_id', 'updated_by'];
+        $optional_put = ['lab_id'];
         $check_put = true;
         $count_put = 0;
         foreach($put as $key => $value) {
@@ -157,11 +173,9 @@ class Question_model extends CI_Model{
                         'response_code' => 400
                     ];
                     return $results;
-                }else {
-                    $count_put--;
                 }
             }else {
-                if(empty($value)){
+                if(!$value){
                     $check_put = false;
                 }
                 $count_put++;
@@ -181,15 +195,33 @@ class Question_model extends CI_Model{
             return $results;
         }
 
-        $_id = $put['_id'];
-        unset($put['_id']);
-        $update = $this->db->update('questions', $put, ['_id' => $_id]);
-        if($update) {
-            $results = (object) [
-                'status' => true,
-                'message' => 'data berhasil diupdate.',
-                'response_code' => 200
-            ];
+        $get_data_questionnaire = $this->db->get_where('questionnaires', ['_id' => $put['questionnaire_id']])->row();
+        if($get_data_questionnaire) {
+            $_id = $put['_id'];
+            unset($put['_id']);
+
+            $lab_id = NULL;
+            $group_id = NULL;
+            if($get_data_questionnaire->goup_id) $group_id = $get_data_questionnaire->goup_id;
+            else $lab_id = $get_data_questionnaire->lab_id;
+
+            $put['lab_id'] = $lab_id;
+            $put['group_id'] = $group_id;
+
+            $update = $this->db->update('questions', $put, ['_id' => $_id]);
+            if($update) {
+                $results = (object) [
+                    'status' => true,
+                    'message' => 'data berhasil diupdate.',
+                    'response_code' => 200
+                ];
+            }else {
+                $results = (object) [
+                    'status' => false,
+                    'message' => 'kesalahan saat memproses request.',
+                    'response_code' => 500
+                ];
+            }
         }else {
             $results = (object) [
                 'status' => false,

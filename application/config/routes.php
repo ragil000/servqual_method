@@ -65,6 +65,7 @@ $route['user/put']          = 'User/put';
 $route['user/delete']          = 'User/delete';
 $route['user/(:num)']              = 'User/index/$1';
 
+$route['laboratorium/get_data_laboratorium']    = 'Laboratorium/get_data_laboratorium';
 $route['laboratorium']              = 'Laboratorium/index';
 $route['laboratorium/create']        = 'Laboratorium/create';
 $route['laboratorium/post']          = 'Laboratorium/post';
@@ -89,6 +90,8 @@ $route['questionnaire/question/post']          = 'Question/post';
 $route['questionnaire/question/put']          = 'Question/put';
 $route['questionnaire/question/delete']          = 'Question/delete';
 $route['questionnaire/question/(:num)']              = 'Question/index/$1';
+
+$route['group/get_data_group']    = 'Group/get_data_group';
 
 $route['analysis/gap5/get_data_summary_servqual']              = 'Gap5/get_data_summary_servqual';
 $route['analysis/gap5']              = 'Gap5/filter';

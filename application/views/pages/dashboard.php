@@ -17,7 +17,7 @@
                 <div class="card-body">
                   <div class="row">
                     <div class="col">
-                      <h5 class="card-title text-uppercase text-muted mb-0">Kuesioner</h5>
+                      <h6 class="card-title text-uppercase text-muted mb-0">Kuesioner</h6>
                       <span class="h2 font-weight-bold mb-0"><?=@$data->data->questionnaire_active?></span>
                     </div>
                     <div class="col-auto">
@@ -38,7 +38,7 @@
                 <div class="card-body">
                   <div class="row">
                     <div class="col">
-                      <h5 class="card-title text-uppercase text-muted mb-0">Kuesioner</h5>
+                      <h6 class="card-title text-uppercase text-muted mb-0">Kuesioner</h6>
                       <span class="h2 font-weight-bold mb-0"><?=@$data->data->questionnaire?></span>
                     </div>
                     <div class="col-auto">
@@ -59,7 +59,7 @@
                 <div class="card-body">
                   <div class="row">
                     <div class="col">
-                      <h5 class="card-title text-uppercase text-muted mb-0">Responden</h5>
+                      <h6 class="card-title text-uppercase text-muted mb-0">Responden</h6>
                       <span class="h2 font-weight-bold mb-0"><?=@$data->data->answerer?></span>
                     </div>
                     <div class="col-auto">
@@ -80,7 +80,7 @@
                 <div class="card-body">
                   <div class="row">
                     <div class="col">
-                      <h5 class="card-title text-uppercase text-muted mb-0">Laboratorium</h5>
+                      <h6 class="card-title text-uppercase text-muted mb-0">Laboratorium</h6>
                       <span class="h2 font-weight-bold mb-0"><?=@$data->data->lab?></span>
                     </div>
                     <div class="col-auto">

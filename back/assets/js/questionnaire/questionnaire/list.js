@@ -9,8 +9,41 @@ $('#questionnaires').addClass('active')
 
 $('.alert').delay(3500).fadeOut()
 
-function detailModal(url) {
+async function detail(url) {
     window.location = url
+}
+
+async function detailModal(e) {
+    let group_id = $(e).data('id')
+    console.log('ww', base_url+'group/get_data_group?group_id='+group_id)
+
+    let getData = await $.get(base_url+'group/get_data_group?group_id='+group_id)
+    getData = JSON.parse(getData)
+
+    let data = null
+    if(getData['status']) data = getData['data']
+    
+    $('#modalDetailLabel').html('Detail')
+
+    let table = ''
+    if(data) {
+        table = '<table class="modal-table" style="table-layout: fixed; width: 100%;">'+
+                    '<tbody>'
+                    
+                    let no = 1
+                    data.forEach((e) => {
+                        table +=  '<tr>'+
+                                    '<td>'+no+'. '+e['lab_title']+'</td>'+
+                                '</tr>'
+                        no++
+                    })
+
+        table +=    '</tbody>'+
+                '</table>'
+    }
+
+    $('#modalDetailText').html(table)
+    $('#modalDetail').modal('show')
 }
 
 function beforePublish(url) {

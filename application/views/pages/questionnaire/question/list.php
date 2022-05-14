@@ -10,6 +10,8 @@
                                         <div class="form-group">
                                             <select class="form-control select2" name="questionnaire_id" onchange="changeData('<?=base_url('questionnaire/question')?>', {'questionnaire_id': {'type': 'select', 'id': 'questionnaire_id'}})" id="questionnaire_id">
                                                 <?php
+                                                $is_disabled = '';
+                                                if(($current_questionnaire->data->created_by_role == 'admin' && $this->session->userdata('role') == 'super') || ($current_questionnaire->data->created_by_role == 'super' && $this->session->userdata('role') == 'admin')) $is_disabled = 'disabled';
                                                 $is_data_ready = '';
                                                 if(empty($questionnaire_id)) {
                                                     $is_data_ready = 'disabled';
@@ -31,7 +33,7 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-5 text-left">
-                                        <a href="<?= base_url('questionnaire/question/create') ?>" class="btn btn-primary btn-icon <?=$is_delete?> <?=$is_data_ready?>"><span class="btn-inner--icon"><i class="ni ni-single-copy-04"></i></span> Tambah</a>
+                                        <a href="<?= base_url('questionnaire/question/create') ?>" class="btn btn-primary btn-icon <?=$is_disabled?> <?=$is_delete?> <?=$is_data_ready?>"><span class="btn-inner--icon"><i class="ni ni-single-copy-04"></i></span> Tambah</a>
                                     </div>
                                 </div>
                             </div>
@@ -62,8 +64,8 @@
                                                     <td><a href="#" onclick="detailModal(this)" data-value="<?=$value->question?>" data-toggle="tooltip" data-placement="top" title="Klik untuk melihat detail"><?= _limitText($value->question, 80) ?></a></td>
                                                     <td><a href="#" onclick="detailModal(this)" data-value="<?=$value->dimension_description?>" data-toggle="tooltip" data-placement="top" title="Klik untuk melihat detail"><?= $value->dimension_title ?></a></td>
                                                     <td class="text-right">
-                                                        <a href="<?= base_url('questionnaire/question/create?_id='.urlencode(_encrypt($value->_id, 'penyihir-cinta', true))) ?>" class="btn btn-sm btn-info <?=$is_delete?>" data-toggle="tooltip" data-placement="top" title="Ubah data"><i class="ni ni-settings-gear-65"></i></a>
-                                                        <a href="#" class="btn btn-sm btn-danger <?=$is_delete?>" data-toggle="tooltip" data-placement="top" title="Hapus data" onclick="beforeDelete('<?= base_url('questionnaire/question/delete?_id='.urlencode(_encrypt($value->_id, 'penyihir-cinta', true))) ?>')"><i class="fa fa-trash"></i></a>
+                                                        <a href="<?= base_url('questionnaire/question/create?_id='.urlencode(_encrypt($value->_id, 'penyihir-cinta', true))) ?>" class="btn btn-sm btn-info <?=$is_disabled?> <?=$is_delete?>" data-toggle="tooltip" data-placement="top" title="Ubah data"><i class="ni ni-settings-gear-65"></i></a>
+                                                        <a href="#" class="btn btn-sm btn-danger <?=$is_disabled?> <?=$is_delete?>" data-toggle="tooltip" data-placement="top" title="Hapus data" onclick="beforeDelete('<?= base_url('questionnaire/question/delete?_id='.urlencode(_encrypt($value->_id, 'penyihir-cinta', true))) ?>')"><i class="fa fa-trash"></i></a>
                                                     </td>
                                                 </tr>
                                             <?php

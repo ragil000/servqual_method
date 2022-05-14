@@ -68,6 +68,23 @@ class Laboratorium extends CI_Controller {
 		$this->load->view('templates/footer');
 	}
 
+    public function get_data_laboratorium() {
+        $page = $this->input->get('page');
+        $search = $this->input->get('search');
+
+        $data = $this->Laboratorium_model->get_data($page, $search);
+        // if($data->status) {
+        //     $newData = [];
+        //     foreach($data->data as $value) {
+        //         $value->_id = urlencode(_encrypt($value->_id, 'penyihir-cinta', true));
+        //         array_push($newData, $value);
+        //     }
+        //     $data->data = $newData;
+        // }
+
+        echo json_encode($data);
+    }
+
 	public function create() {
         $this->session->set_userdata(['old_url' => str_replace('/servqual_method/', '',$_SERVER['REQUEST_URI']), 'old_query' => $_SERVER['QUERY_STRING']]);
         $_id = $this->input->get('_id');

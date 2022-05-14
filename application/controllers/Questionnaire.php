@@ -71,6 +71,9 @@ class Questionnaire extends CI_Controller {
 		$data['head'] 			= 'Kuesioner';
 		$data['content']		= 'Daftar Kuesioner';
 		$data['title']			= 'Kuesioner';
+        // $data['style']			= 'analysis/gap5/filter.css';
+		$data['css_vendors']	= ['select2/css/select2.min.css'];
+		$data['js_vendors'] 	= ['select2/js/select2.min.js'];
 		$data['script']			= 'questionnaire/questionnaire/create.js';
 		$this->load->view('templates/header', $data);
 		$this->load->view('pages/questionnaire/questionnaire/create');
@@ -86,15 +89,31 @@ class Questionnaire extends CI_Controller {
 		$this->form_validation->set_rules('start_periode', 'Periode Awal', 'trim|required');
 		$this->form_validation->set_rules('end_periode', 'Periode Akhir', 'trim|required');
 		if($this->form_validation->run()) {
-			$post = [
-                'start_periode' => $this->input->post('start_periode'),
-                'end_periode' => $this->input->post('end_periode'),
-                'status' => 'active',
-                'lab_id' => $this->session->userdata('lab_id'),
-                'created_by' => $this->session->userdata('_id')
-            ];
-
-			$results = $this->Questionnaire_model->post_data($post);
+            $lab_id = NULL;
+            $is_group = FALSE;
+            if($this->session->userdata('lab_id')) $lab_id = $this->session->userdata('lab_id');
+            else {
+                $is_group = is_array($this->input->post('lab_id')) ? (count($this->input->post('lab_id')) > 1 ? TRUE : FALSE) : FALSE;
+                $lab_id = $this->input->post('lab_id');
+            }
+            if($lab_id) {
+                $post = [
+                    'start_periode' => $this->input->post('start_periode'),
+                    'end_periode' => $this->input->post('end_periode'),
+                    'status' => 'active',
+                    'is_group' => $is_group,
+                    'created_by_role' => $this->session->userdata('role'),
+                    'lab_id' => $lab_id,
+                    'created_by' => $this->session->userdata('_id')
+                ];
+    
+                $results = $this->Questionnaire_model->post_data($post);
+            }else {
+                $results = (object) [
+                    'status'	=> FALSE,
+                    'message'	=> 'data yang diinput tidak valid.'
+                ];
+            }
 		}else {
 			$results = (object) [
 				'status'	=> FALSE,

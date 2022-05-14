@@ -47,7 +47,7 @@ class Answer_model extends CI_Model{
                 array_push($data, $temp_data);
             }
 
-            $this->db->insert_batch('answers', $data);
+            // $this->db->insert_batch('answers', $data);
 
             foreach($data as $value) {
                 $value = (object) $value;
@@ -64,7 +64,7 @@ class Answer_model extends CI_Model{
                         'sum_total_answerer' => $fetch_data->sum_total_answerer+1,
                         'sum_total_point' => $fetch_data->sum_total_point+$value->expectation_answer
                     ];
-                    $update = $this->db->update('summary_servqual', $data, ['question_id' => $value->question_id, 'type' => 'expectation', 'gap' => $value->expectation_answer]);
+                    // $update = $this->db->update('summary_servqual', $data, ['question_id' => $value->question_id, 'type' => 'expectation', 'gap' => $value->expectation_answer]);
                 }else {
                     $data = [
                         'gap' => $value->expectation_answer,
@@ -75,7 +75,7 @@ class Answer_model extends CI_Model{
                         'sum_total_answerer' => 1,
                         'sum_total_point' => $value->expectation_answer
                     ];
-                    $insert = $this->db->insert('summary_servqual', $data);
+                    // $insert = $this->db->insert('summary_servqual', $data);
                 }
 
                 if($check_reality->num_rows() > 0) {
@@ -84,7 +84,7 @@ class Answer_model extends CI_Model{
                         'sum_total_answerer' => $fetch_data->sum_total_answerer+1,
                         'sum_total_point' => $fetch_data->sum_total_point+$value->reality_answer
                     ];
-                    $update = $this->db->update('summary_servqual', $data, ['question_id' => $value->question_id, 'type' => 'reality', 'gap' => $value->reality_answer]);
+                    // $update = $this->db->update('summary_servqual', $data, ['question_id' => $value->question_id, 'type' => 'reality', 'gap' => $value->reality_answer]);
                 }else {
                     $data = [
                         'gap' => $value->reality_answer,
@@ -95,7 +95,7 @@ class Answer_model extends CI_Model{
                         'sum_total_answerer' => 1,
                         'sum_total_point' => $value->reality_answer
                     ];
-                    $insert = $this->db->insert('summary_servqual', $data);
+                    // $insert = $this->db->insert('summary_servqual', $data);
                 }
 
                 $get_data = $this->db->get_where('questions', ['_id' => $value->question_id])->row();
@@ -108,7 +108,7 @@ class Answer_model extends CI_Model{
                     'sum_reality_average' => round($get_data->sum_reality_answer+$value->reality_answer/($get_data->sum_total_answerer+1), 2),
                     'sum_gap5' => round((round($get_data->sum_reality_answer+$value->reality_answer/($get_data->sum_total_answerer+1), 2))-(round($get_data->sum_expectation_answer+$value->expectation_answer/($get_data->sum_total_answerer+1), 2)), 2)
                 ];
-                $update = $this->db->update('questions', $data, ['_id' => $value->question_id]);
+                // $update = $this->db->update('questions', $data, ['_id' => $value->question_id]);
             }
 
             $results = (object) [

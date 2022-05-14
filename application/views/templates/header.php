@@ -159,7 +159,7 @@
                             </ul>
                         </div>
                     </li>
-                    <li class="nav-item" <?=$admin_menu?>>
+                    <li class="nav-item">
                         <a class="nav-link active" id="questionnaire-menu" href="#navbar-questionnaire" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-questionnaire">
                             <i class="ni ni-collection text-primary"></i>
                             <span class="nav-link-text">Kuesioner</span>

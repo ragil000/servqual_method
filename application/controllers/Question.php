@@ -168,16 +168,16 @@ class Question extends CI_Controller {
 		$this->form_validation->set_rules('dimension_id', 'Dimensi', 'trim|required');
 		$this->form_validation->set_rules('question', 'Pertanyaan', 'trim|required');
 		if($this->form_validation->run()) {
-			$post = [
+			$put = [
                 '_id' => $this->input->post('_id'),
                 'dimension_id' => $this->input->post('dimension_id'),
                 'question' => $this->input->post('question'),
                 'questionnaire_id' => $this->input->post('questionnaire_id'),
-                'lab_id' => $this->input->post('lab_id'),
+                'lab_id' => $this->session->userdata('lab_id'),
                 'updated_by' => $this->session->userdata('_id'),
             ];
 
-			$results = $this->Question_model->put_data($post);
+			$results = $this->Question_model->put_data($put);
 		}else {
 			$results = (object) [
 				'status'	=> FALSE,
