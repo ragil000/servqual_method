@@ -10,13 +10,13 @@ class Dashboard_model extends CI_Model{
                                     }
                                     $this->db->where('status', 'active');
                                     $this->db->where('deleted_at', NULL);
-        $get_data_questionnaire =   $this->db->count_all_results('questionnaires');
+        $get_data_questionnaire_active =   $this->db->count_all_results('questionnaires');
 
                                             if($lab_id) {
                                                 $this->db->where('lab_id', $lab_id);
                                             }
                                             $this->db->where('deleted_at', NULL);
-        $get_data_questionnaire_active =    $this->db->count_all_results('questionnaires');
+        $get_data_questionnaire =    $this->db->count_all_results('questionnaires');
 
                                 $this->db->join('questionnaires', 'questionnaires._id=answers.questionnaire_id');
                                 if($lab_id) {

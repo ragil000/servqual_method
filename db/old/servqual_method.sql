@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 15, 2022 at 07:26 AM
+-- Generation Time: May 14, 2022 at 02:38 AM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 5.6.40
 
@@ -3206,6 +3206,14 @@ CREATE TABLE `detail_groups` (
   `lab_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `detail_groups`
+--
+
+INSERT INTO `detail_groups` (`_id`, `group_id`, `lab_id`) VALUES
+(3, 2, 1),
+(4, 2, 2);
+
 -- --------------------------------------------------------
 
 --
@@ -3240,6 +3248,13 @@ CREATE TABLE `groups` (
   `created_by` int(11) NOT NULL,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `groups`
+--
+
+INSERT INTO `groups` (`_id`, `created_by`, `created_at`) VALUES
+(2, 2, '2022-05-13 11:14:59');
 
 -- --------------------------------------------------------
 
@@ -3289,7 +3304,10 @@ CREATE TABLE `questionnaires` (
 --
 
 INSERT INTO `questionnaires` (`_id`, `group_id`, `start_periode`, `end_periode`, `status`, `is_publish`, `is_delete`, `lab_id`, `created_by_role`, `created_by`, `deleted_at`, `created_at`) VALUES
-(35, NULL, '2022-03-30', '2022-04-30', 'nonactive', 'yes', 'no', 1, 'admin', 1, NULL, '2022-03-30 09:41:32');
+(35, NULL, '2022-03-30', '2022-04-30', 'nonactive', 'yes', 'no', 1, 'admin', 1, NULL, '2022-03-30 09:41:32'),
+(36, 2, '2022-05-13', '2022-07-31', 'active', 'no', 'no', NULL, 'super', 2, NULL, '2022-05-13 11:14:59'),
+(37, NULL, '2022-05-13', '2022-07-13', 'nonactive', 'no', 'yes', 1, 'super', 2, NULL, '2022-05-13 11:15:32'),
+(38, NULL, '2022-05-14', '2022-06-14', 'active', 'no', 'yes', 1, 'admin', 1, NULL, '2022-05-14 07:25:22');
 
 -- --------------------------------------------------------
 
@@ -3335,7 +3353,9 @@ INSERT INTO `questions` (`_id`, `question`, `dimension_id`, `group_id`, `lab_id`
 (57, 'Asisten Laboratorim memperlakukan pengguna Laboratorium secara penuh perhatian', 5, NULL, 1, 35, 1, NULL, NULL),
 (58, 'Asisten Laboratorium yang bertugas sangat ramah', 5, NULL, 1, 35, 1, NULL, NULL),
 (59, 'Asisten Laboratorium memiliki keterampilan', 5, NULL, 1, 35, 1, NULL, NULL),
-(60, 'Respon Asisten Laboratorium terhadap pertanyaan dan keluhan pengguna laboratorium (Mahasiswa) sangat baik', 5, NULL, 1, 35, 1, NULL, NULL);
+(60, 'Respon Asisten Laboratorium terhadap pertanyaan dan keluhan pengguna laboratorium (Mahasiswa) sangat baik', 5, NULL, 1, 35, 1, NULL, NULL),
+(61, 'apa 1?', 4, NULL, NULL, 36, 2, NULL, NULL),
+(62, 'apa 2?', 3, NULL, NULL, 36, 2, 2, NULL);
 
 -- --------------------------------------------------------
 
@@ -3707,7 +3727,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `answers`
 --
 ALTER TABLE `answers`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3213;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3205;
 
 --
 -- AUTO_INCREMENT for table `detail_groups`
@@ -3743,19 +3763,19 @@ ALTER TABLE `questionnaires`
 -- AUTO_INCREMENT for table `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --
 -- AUTO_INCREMENT for table `summary_servqual`
 --
 ALTER TABLE `summary_servqual`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=284;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=274;
 
 --
 -- AUTO_INCREMENT for table `temp_gap5`
 --
 ALTER TABLE `temp_gap5`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `users`
