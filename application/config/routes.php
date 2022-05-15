@@ -98,7 +98,8 @@ $route['analysis/gap5']              = 'Gap5/filter';
 $route['analysis/gap5/list']              = 'Gap5/index';
 $route['analysis/gap5/list/(:num)']              = 'Gap5/index/$1';
 
-$route['analysis/ranking']              = 'Ranking/index';
+$route['analysis/ranking']              = 'Ranking/filter';
+$route['analysis/ranking/list']              = 'Ranking/index';
 $route['analysis/ranking/(:num)']              = 'Ranking/index/$1';
 
 $route['as_user']              = 'AsUser/index';

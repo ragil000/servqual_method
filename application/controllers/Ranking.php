@@ -12,12 +12,28 @@ class Ranking extends CI_Controller {
 		$this->load->model('Question_model');
 	}
 
+    public function filter() {
+        $this->session->set_userdata(['old_url' => str_replace('/servqual_method/', '',$_SERVER['REQUEST_URI']), 'old_query' => $_SERVER['QUERY_STRING']]);
+        
+		$data['head'] 			= 'Perangkingan Nilai GAP 5';
+		$data['content']		= 'Filter Perangkingan Nilai GAP 5';
+		$data['title']			= 'Perangkingan Nilai GAP 5';
+		$data['style']			= 'analysis/ranking/filter.css';
+		$data['css_vendors']	= ['select2/css/select2.min.css'];
+		$data['js_vendors'] 	= ['select2/js/select2.min.js'];
+		$data['script']			= 'analysis/ranking/filter.js';
+
+		$this->load->view('templates/header', $data);
+		$this->load->view('pages/analysis/ranking/filter');
+		$this->load->view('templates/footer');
+	}
+
 	public function index($page=1) {
         $this->session->set_userdata(['old_url' => str_replace('/servqual_method/', '',$_SERVER['REQUEST_URI']), 'old_query' => $_SERVER['QUERY_STRING']]);
         
-        $search = $this->input->post('search') || $this->session->userdata('search_question');
+        $search = $this->input->post('search') || $this->session->userdata('search_ranking');
         if($search) {
-            $this->session->set_userdata(['search_question' => $search]);
+            $this->session->set_userdata(['search_ranking' => $search]);
         }
 
         $questionnaire_id = urldecode($this->input->post('questionnaire_id'));

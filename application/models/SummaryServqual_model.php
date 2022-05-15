@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class SummaryServqual_model extends CI_Model{
 
     public function get_detail_data($question_id){
-        $get_data =    $this->db->get_where('summary_servqual', ['question_id' => $question_id]);
+        $get_data =    $this->db->get_where('summary_servqual', ['question_id' => $question_id, 'lab_id' => $this->session->usedata('lab_id')]);
 
         if($get_data->num_rows() > 0) {
             $fetch_data = $get_data->result();
