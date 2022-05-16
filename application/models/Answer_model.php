@@ -44,8 +44,8 @@ class Answer_model extends CI_Model{
                     // die;
 
                     for($k = 1; $k <= $lab_count; $k++) {
-                        $expectation_answer = $post['expectation_answer_'.$k.'-'.$labs[$k-1]];
-                        $reality_answer = $post['reality_answer_'.$k.'-'.$labs[$k-1]];
+                        $expectation_answer = $post['expectation_answer_'.$i.'-'.$labs[$k-1]];
+                        $reality_answer = $post['reality_answer_'.$i.'-'.$labs[$k-1]];
         
                         $temp_data = [
                             'question_id' => $question_id,
