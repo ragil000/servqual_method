@@ -8,7 +8,7 @@
                 <div class="card-body">
                     <?php
                     $is_super = 'hidden';
-                    if($this->session->userdata('role') == 'super') $is_super = 'hidden';
+                    if($this->session->userdata('role') == 'super') $is_super = '';
                     if ($this->session->userdata('flash_message')) {
                     ?>
                         <div class="alert alert-<?= $this->session->userdata('status') ?>" role="alert">
