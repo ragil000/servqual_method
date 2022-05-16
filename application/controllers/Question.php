@@ -31,7 +31,7 @@ class Question extends CI_Controller {
         $data['current_questionnaire'] = $this->Questionnaire_model->get_default_questionnaire();
         
 		$page = floor(($page/10) + 1);
-        $get_data				= $this->Question_model->get_data($page, $search, @$data['current_questionnaire']->data->_id);
+        $get_data				= $this->Question_model->get_data_list($page, $search, @$data['current_questionnaire']->data->_id);
 
         //konfigurasi pagination
         $config['base_url'] = site_url('questionnaire/question'); //site url

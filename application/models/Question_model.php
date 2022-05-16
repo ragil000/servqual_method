@@ -3,6 +3,73 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Question_model extends CI_Model{
 
+    public function get_data_list($page, $search=NULL, $questionnaire_id=NULL, $limit=10, $is_ranking=false){
+        $page = (int)$page;
+        $page = $page <= 0 ? 1 : $page;
+        $start = ($page-1)*$limit;
+
+                        $this->db->join('users', 'users._id=questions.created_by', 'left');
+                        $this->db->join('labs', 'labs._id=questions.lab_id', 'left');
+                        $this->db->join('dimensions', 'dimensions._id=questions.dimension_id', 'left');
+                        $this->db->join('temp_gap5', 'temp_gap5.lab_id=questions.lab_id AND temp_gap5.questionnaire_id=questions.questionnaire_id AND temp_gap5.question_id=questions._id', 'left');
+                        $this->db->join('questionnaires', 'questionnaires._id=questions.questionnaire_id', 'left');
+                        $this->db->where('questions.questionnaire_id', $questionnaire_id);
+                        if($search) {
+                            $this->db->like('questions.question', $search);
+                            $this->db->or_like('dimensions.title', $search);
+                        }
+                        $this->db->where('questions.deleted_at', NULL);
+                        $this->db->select('questions._id, questions.question, temp_gap5.sum_expectation_answer, temp_gap5.sum_reality_answer, temp_gap5.sum_total_answerer, temp_gap5.sum_expectation_average, temp_gap5.sum_reality_average, temp_gap5.sum_gap5, labs._id as lab_id, labs.title as lab_title, dimensions._id as dimension_id, dimensions.title as dimension_title, dimensions.description as dimension_description, questionnaires._id as questionnaire_id, questionnaires.is_publish, questionnaires.created_by_role, questionnaires.start_periode as questionnaire_start_periode, questionnaires.end_periode as questionnaire_end_periode, questionnaires.status as questionnaire_status, users.username as creator');
+                        $this->db->limit($limit, $start);
+                        if($is_ranking) {
+                            $this->db->order_by('temp_gap5.sum_gap5', 'DESC');
+                        }else {
+                            $this->db->order_by('questions.dimension_id', 'ASC');
+                        }
+        $get_data =    $this->db->get('questions');
+
+                    $this->db->join('users', 'users._id=questions.created_by', 'left');
+                    $this->db->join('labs', 'labs._id=questions.lab_id', 'left');
+                    $this->db->join('dimensions', 'dimensions._id=questions.dimension_id', 'left');
+                    $this->db->join('temp_gap5', 'temp_gap5.lab_id=questions.lab_id AND temp_gap5.questionnaire_id=questions.questionnaire_id AND temp_gap5.question_id=questions._id', 'left');
+                    $this->db->join('questionnaires', 'questionnaires._id=questions.questionnaire_id', 'left');
+                    $this->db->where('questions.questionnaire_id', $questionnaire_id);
+                    if($search) {
+                        $this->db->like('questions.question', $search);
+                        $this->db->or_like('dimensions.title', $search);
+                    }
+                    $this->db->where('questions.deleted_at', NULL);
+                    $this->db->select('questions._id, questions.question, temp_gap5.sum_expectation_answer, temp_gap5.sum_reality_answer, temp_gap5.sum_total_answerer, temp_gap5.sum_expectation_average, temp_gap5.sum_reality_average, temp_gap5.sum_gap5, labs._id as lab_id, labs.title as lab_title, dimensions._id as dimension_id, dimensions.title as dimension_title, dimensions.description as dimension_description, questionnaires._id as questionnaire_id, questionnaires.is_publish, questionnaires.created_by_role, questionnaires.start_periode as questionnaire_start_periode, questionnaires.end_periode as questionnaire_end_periode, questionnaires.status as questionnaire_status, users.username as creator');
+        $count =    $this->db->count_all_results('questions');
+        
+        if($count > 0) {
+            $results = (object) [
+                'status' => true,
+                'message' => 'data tertampil',
+                'data' => $get_data->result(),
+                'limit' => $limit,
+                'total_data_displayed' => $get_data->num_rows(),
+                'total_data' => $count,
+                'total_page' => ceil($count/$limit),
+                'current_page' => $page,
+                'response_code' => 200
+            ];
+        }else {
+            $results = (object) [
+                'status' => false,
+                'message' => 'data kosong',
+                'data' => null,
+                'limit' => 10,
+                'total_data_displayed' => 0,
+                'total_data' => 0,
+                'total_page' => 0,
+                'current_page' => 1,
+                'response_code' => 200
+            ];
+        }
+        return $results;
+    }
+
     public function get_data($page, $search=NULL, $questionnaire_id=NULL, $limit=10, $is_ranking=false){
         $page = (int)$page;
         $page = $page <= 0 ? 1 : $page;
@@ -138,7 +205,7 @@ class Question_model extends CI_Model{
         if($get_data_questionnaire) {
             $lab_id = NULL;
             $group_id = NULL;
-            if($get_data_questionnaire->group_id) $group_id = $get_data_questionnaire->goup_id;
+            if($get_data_questionnaire->group_id) $group_id = $get_data_questionnaire->group_id;
             else $lab_id = $get_data_questionnaire->lab_id;
 
             $post['lab_id'] = $lab_id;

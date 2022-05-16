@@ -38,13 +38,9 @@ class AsUser extends CI_Controller {
             }else {
                 $data['lab_id'] = $current_questionnaire->lab_id;
             }
-            // echo "<pre>";
-            // print_r($data);
-            // echo "</pre>";
-            // die;
         }
         $data['current_questionnaire']  = $get_questionnaire->status ? $get_questionnaire->data : NULL;
-        $data['data']           = $this->Question_model->get_data(1, NULL, $questionnaire_id, 100);
+        $data['data']           = $this->Question_model->get_data_list(1, NULL, $questionnaire_id, 100);
 		$data['head'] 			= 'Kuesioner Penilaian Kualitas Layanan';
 		$data['content']		= 'Kuesioner Penilaian Kualitas Layanan';
 		$data['title']			= 'Kuesioner Penilaian Kualitas Layanan';
