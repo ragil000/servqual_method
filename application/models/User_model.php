@@ -98,11 +98,9 @@ class User_model extends CI_Model{
                         'response_code' => 400
                     ];
                     return $results;
-                }else {
-                    $count_post--;
                 }
             }else {
-                if(empty($value)){
+                if(!$value){
                     $check_post = false;
                 }
                 $count_post++;
