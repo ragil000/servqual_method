@@ -126,10 +126,8 @@ class Questionnaire_model extends CI_Model{
                         $this->db->order_by('questionnaires._id', 'DESC');
         $get_data =    $this->db->get('questionnaires');
 
-
-                    if($this->session->userdata('role') == 'admin') {
-                        $this->db->where('questionnaires.lab_id', $this->session->userdata('lab_id'));
-                    }
+                    $this->db->join('users', 'users._id=questionnaires.created_by', 'left');
+                    $this->db->join('labs', 'labs._id=questionnaires.lab_id', 'left');
                     if($search) {
                         $this->db->like('questionnaires.start_periode', $search);
                         $this->db->or_like('questionnaires.end_periode', $search);
@@ -140,7 +138,7 @@ class Questionnaire_model extends CI_Model{
                     if($this->session->userdata('role') == 'admin') {
                         if(count($group_ids)) {
                             $this->db->group_start();
-                                $this->db->where_in('questionnaires.group_id', 2);
+                                $this->db->where_in('questionnaires.group_id', $group_ids);
                                 $this->db->or_where('questionnaires.lab_id', $this->session->userdata('lab_id'));
                             $this->db->group_end();
                         }else {
@@ -148,6 +146,7 @@ class Questionnaire_model extends CI_Model{
                         }
                     }
                     $this->db->where('questionnaires.deleted_at', NULL);
+                    $this->db->select('questionnaires._id, questionnaires.group_id, questionnaires.is_delete, questionnaires.is_publish, questionnaires.created_by_role, labs._id as lab_id, labs.title as lab_title, questionnaires.start_periode, questionnaires.end_periode, questionnaires.status, users.username as creator');
         $count =    $this->db->count_all_results('questionnaires');
         
         if($count > 0) {
