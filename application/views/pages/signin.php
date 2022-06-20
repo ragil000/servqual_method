@@ -23,7 +23,7 @@
         <!-- Navbar -->
         <nav class="navbar navbar-top navbar-horizontal navbar-expand-md navbar-dark">
             <div class="container px-4">
-                <a class="navbar-brand" href="../index.html">
+                <a class="navbar-brand" href="#">
                     <!-- <img src="<?= base_url('back') ?>/assets/img/brand/white.png" /> -->
                     <h2 class="text-white">Servqual Method</h2>
                 </a>

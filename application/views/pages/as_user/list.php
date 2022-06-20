@@ -63,7 +63,7 @@
                                                                     <div class="col-12 mb-0 pb-0">
                                                                         <div class="card bg-active mb-2">
                                                                             <div class="card-body pl-3 pr-2 pb-0 pt-3">    
-                                                                                <p id="question_<?=$no?>"><span class="badge badge-danger mr-2"><?=$no?></span> <?=$value->question?></p>
+                                                                                <p id="question_<?=$no?>"><span class="badge badge-danger mr-2"><?=$no?></span> <span style="color: #000000"><?=$value->question?></span></p>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -73,16 +73,16 @@
                                                                                 foreach($labs as $lab) {
                                                                     ?>
                                                                     <div class="col-12 mb-0 border">
-                                                                        <h3><span class="text-info">Bagian: </span><?= $lab->lab_title ?></h3>
+                                                                        <h5><span class="text-info">Bagian: </span><?= $lab->lab_title ?></h5>
                                                                     </div>
                                                                     <div class="col-12 mb-4 border">
                                                                         <div class="row">
                                                                             <div class="col-6">
                                                                                 <div class="row border">
                                                                                     <div class="col-12 text-center mb-4">
-                                                                                        <b>Harapan</b>
+                                                                                        <b style="font-size: .8em">Harapan</b>
                                                                                     </div>
-                                                                                    <div class="col-6">
+                                                                                    <div class="col-6" style="font-size: .8em">
                                                                                         <div class="row">
                                                                                             <div class="col-12 ml-lg-4">
                                                                                                 <label class="form-radio-label">
@@ -104,7 +104,7 @@
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
-                                                                                    <div class="col-6">
+                                                                                    <div class="col-6" style="font-size: .8em">
                                                                                         <div class="row">
                                                                                             <div class="col-12 ml-lg-4">
                                                                                                 <label class="form-radio-label">
@@ -125,9 +125,9 @@
                                                                             <div class="col-6">
                                                                                 <div class="row border">
                                                                                     <div class="col-12 text-center mb-4">
-                                                                                        <b>Kenyataan</b>
+                                                                                        <b style="font-size: .8em">Kenyataan</b>
                                                                                     </div>
-                                                                                    <div class="col-6">
+                                                                                    <div class="col-6" style="font-size: .8em">
                                                                                         <div class="row">
                                                                                             <div class="col-12 ml-lg-4">
                                                                                                 <label class="form-radio-label">
@@ -149,7 +149,7 @@
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
-                                                                                    <div class="col-6">
+                                                                                    <div class="col-6" style="font-size: .8em">
                                                                                         <div class="row">
                                                                                             <div class="col-12 ml-lg-4">
                                                                                                 <label class="form-radio-label">
